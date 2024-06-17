@@ -1,0 +1,11 @@
+.ipynb_checkpoints/
+node_modules
+RumbleSandbox.ipynb
+jupyter_lsp_jsoniq_language_server.egg-info
+dist
+build
+__pycache__
+out.txt
+jsoniq_jupyter_lsp.egg-info
+.virtual_documents/
+.yarn
