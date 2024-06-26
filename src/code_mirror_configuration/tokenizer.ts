@@ -1,8 +1,8 @@
 // import antlr from "antlr4";
-import { CharStreams, CommonTokenStream, CommonToken } from "antlr4ts";
+import { CharStream, CommonTokenStream, CommonToken } from "antlr4ng";
 import { tags, Tag } from "@lezer/highlight";
 import { StreamLanguage } from "@codemirror/language";
-import { jsoniqLexer } from "../grammar/jsoniqLexer";
+import { jsoniqLexer } from "../grammar/jsoniqLexer.js";
 
 function getStyleNameByTag(tag: Tag): string {
   for (let t in tags) {
@@ -29,14 +29,14 @@ function getTokens(tokens: CommonToken[]) {
       tokenName: getTokenNameByTokenValue(token.type),
       text: token.text || "",
       type: token.type,
-      startIndex: token.startIndex,
-      stopIndex: token.stopIndex,
+      startIndex: token.start,
+      stopIndex: token.stop,
     };
   });
 }
 
 export function getTokensForText(text: string) {
-  var chars = CharStreams.fromString(text);
+  var chars = CharStream.fromString(text);
   var lexer = new jsoniqLexer(chars);
   var tokensStream = new CommonTokenStream(lexer);
   tokensStream.fill();
@@ -46,10 +46,13 @@ export function getTokensForText(text: string) {
 export const jsoniqLanguageDefinition = StreamLanguage.define({
   token: (stream, _) => {
     const tokens = getTokensForText(stream.string);
+    console.log("Tokens:");
+    console.log(tokens);
     const nextToken = tokens.filter((t) => t.startIndex >= stream.pos)[0];
     if (nextToken.type !== jsoniqLexer.EOF && stream.match(nextToken.text)) {
       let valueClass = getStyleNameByTag(tags.keyword);
-
+      console.log(nextToken);
+      console.log(nextToken.type);
       switch (nextToken.type) {
         case jsoniqLexer.Kmodule:
         case jsoniqLexer.Kversion:
