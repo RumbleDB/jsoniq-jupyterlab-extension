@@ -43,10 +43,16 @@ export const jsoniqLanguageDefinition = StreamLanguage.define({
         const nextToken = tokens.filter((t) => t.startIndex >= stream.pos)[0];
         if (nextToken.type !== jsoniqLexer.EOF && stream.match(nextToken.text)) {
             let valueClass = getStyleNameByTag(tags.keyword);
+            console.log(nextToken);
             switch (nextToken.type) {
-                case jsoniqLexer.Kmodule:
+                case jsoniqLexer.T__1:
+                    // $ symbol
+                    valueClass = getStyleNameByTag(tags.variableName);
+                    break;
+                case jsoniqLexer.NCName:
+                    valueClass = getStyleNameByTag(tags.variableName);
+                    break;
                 case jsoniqLexer.Kversion:
-                case jsoniqLexer.Kexternal:
                 case jsoniqLexer.Kcontext:
                 case jsoniqLexer.Ktype:
                 case jsoniqLexer.Kfor:
@@ -119,10 +125,71 @@ export const jsoniqLanguageDefinition = StreamLanguage.define({
                 case jsoniqLexer.Kor:
                 case jsoniqLexer.Knot:
                 case jsoniqLexer.Kcontext_dollars:
-                    valueClass = "keyword";
+                case jsoniqLexer.Ktrue:
+                case jsoniqLexer.Kfalse:
+                    valueClass = getStyleNameByTag(tags.keyword);
+                    break;
+                case jsoniqLexer.XQComment:
+                    valueClass = getStyleNameByTag(tags.comment);
+                    break;
+                case jsoniqLexer.STRING:
+                    valueClass = getStyleNameByTag(tags.string);
+                    break;
+                case jsoniqLexer.Literal:
+                case jsoniqLexer.NumericLiteral:
+                case jsoniqLexer.DoubleLiteral:
+                case jsoniqLexer.IntegerLiteral:
+                case jsoniqLexer.DecimalLiteral:
+                    valueClass = getStyleNameByTag(tags.number);
+                    break;
+                case jsoniqLexer.T__33:
+                case jsoniqLexer.T__34:
+                    // [] brackets
+                    valueClass = getStyleNameByTag(tags.squareBracket);
+                    break;
+                case jsoniqLexer.T__2:
+                case jsoniqLexer.T__3:
+                    // {} braces
+                    valueClass = getStyleNameByTag(tags.brace);
+                    break;
+                case jsoniqLexer.T__4:
+                case jsoniqLexer.T__5:
+                    // () parenthesis
+                    valueClass = getStyleNameByTag(tags.paren);
+                    break;
+                case jsoniqLexer.T__27:
+                case jsoniqLexer.T__28:
+                case jsoniqLexer.T__6:
+                case jsoniqLexer.T__29:
+                case jsoniqLexer.T__31:
+                case jsoniqLexer.Kassign:
+                    // +, -, *, div, mod, :=
+                    valueClass = getStyleNameByTag(tags.operator);
+                    break;
+                case jsoniqLexer.T__9:
+                case jsoniqLexer.T__35:
+                case jsoniqLexer.T__0:
+                    // ",", ".", ";"
+                    valueClass = getStyleNameByTag(tags.punctuation);
+                    break;
+                case jsoniqLexer.Kfunction:
+                case jsoniqLexer.Kvariable:
+                case jsoniqLexer.Klet:
+                    valueClass = getStyleNameByTag(tags.keyword);
+                    break;
+                case jsoniqLexer.Knamespace:
+                case jsoniqLexer.Kexternal:
+                    valueClass = getStyleNameByTag(tags.namespace);
+                    break;
+                case jsoniqLexer.Kmodule:
+                    valueClass = getStyleNameByTag(tags.moduleKeyword);
+                    break;
+                case jsoniqLexer.T__8:
+                    // "%"
+                    valueClass = getStyleNameByTag(tags.annotation);
                     break;
                 default:
-                    valueClass = "variable";
+                    valueClass = getStyleNameByTag(tags.variableName);
                     break;
             }
             return valueClass;
