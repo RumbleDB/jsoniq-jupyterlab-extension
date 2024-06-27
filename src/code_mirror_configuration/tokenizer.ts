@@ -1,62 +1,109 @@
 // import antlr from "antlr4";
 import { CharStream, CommonTokenStream, CommonToken } from "antlr4ng";
 import { tags, Tag } from "@lezer/highlight";
-import { StreamLanguage } from "@codemirror/language";
+import { StreamLanguage, StringStream } from "@codemirror/language";
 import { jsoniqLexer } from "../grammar/jsoniqLexer.js";
 
-function getStyleNameByTag(tag: Tag): string {
-  for (let t in tags) {
-    if ((tags as any)[t] === tag) {
-      return t;
+interface Token {
+  tokenName: string;
+  text: string;
+  type: number;
+  startIndex: number;
+  stopIndex: number;
+}
+
+interface TokenizerState {
+  tokenValueClassFromPreviousTokenContext: string;
+  hasTokenValueClassFromPreviousToken: boolean;
+}
+
+class Tokenizer {
+  private tokens;
+
+  constructor(text: string) {
+    this.tokens = this.getTokensForText(text);
+  }
+
+  private getTokensForText(text: string) {
+    var chars = CharStream.fromString(text);
+    var lexer = new jsoniqLexer(chars);
+    var tokensStream = new CommonTokenStream(lexer);
+    tokensStream.fill();
+    return this.convertCommonTokensToTokens((tokensStream as any).tokens);
+  }
+
+  private convertCommonTokensToTokens(tokens: CommonToken[]): Token[] {
+    return tokens.map((token) => {
+      return {
+        tokenName: this.getTokenNameByTokenValue(token.type),
+        text: token.text || "",
+        type: token.type,
+        startIndex: token.start,
+        stopIndex: token.stop,
+      };
+    });
+  }
+
+  private getTokenNameByTokenValue(tokenValue: number): string {
+    for (let tokenName in jsoniqLexer) {
+      if (((jsoniqLexer as any)[tokenName] as number) === tokenValue) {
+        return tokenName;
+      }
+    }
+    return "";
+  }
+
+  public findCurrentToken(streamPos: number): Token {
+    return this.tokens.filter((t) => t.startIndex >= streamPos)[0];
+  }
+}
+
+class TokenToCodeMirrorStyleConverter {
+  private currToken;
+  private stream;
+  private state;
+
+  constructor(currToken: Token, stream: StringStream, state: TokenizerState) {
+    this.currToken = currToken;
+    this.stream = stream;
+    this.state = state;
+  }
+
+  private getStyleNameByTag(tag: Tag): string {
+    for (let t in tags) {
+      if ((tags as any)[t] === tag) {
+        return t;
+      }
+    }
+    return "";
+  }
+
+  public convertTokenToCodeMirrorStyle() {
+    if (
+      this.state.hasTokenValueClassFromPreviousToken &&
+      this.stream.match(this.currToken.text)
+    ) {
+      // Some previous context set the current token's class
+      this.state.hasTokenValueClassFromPreviousToken = false;
+      return this.state.tokenValueClassFromPreviousTokenContext;
+    } else {
+      return this.convertCurrentTokenToCodeMirrorStyle();
     }
   }
 
-  return "";
-}
-function getTokenNameByTokenValue(tokenValue: number): string {
-  for (let tokenName in jsoniqLexer) {
-    if (((jsoniqLexer as any)[tokenName] as number) === tokenValue) {
-      return tokenName;
-    }
-  }
-
-  return "";
-}
-
-function getTokens(tokens: CommonToken[]) {
-  return tokens.map((token) => {
-    return {
-      tokenName: getTokenNameByTokenValue(token.type),
-      text: token.text || "",
-      type: token.type,
-      startIndex: token.start,
-      stopIndex: token.stop,
-    };
-  });
-}
-
-export function getTokensForText(text: string) {
-  var chars = CharStream.fromString(text);
-  var lexer = new jsoniqLexer(chars);
-  var tokensStream = new CommonTokenStream(lexer);
-  tokensStream.fill();
-  return getTokens((tokensStream as any).tokens);
-}
-
-export const jsoniqLanguageDefinition = StreamLanguage.define({
-  token: (stream, _) => {
-    const tokens = getTokensForText(stream.string);
-    const nextToken = tokens.filter((t) => t.startIndex >= stream.pos)[0];
-    if (nextToken.type !== jsoniqLexer.EOF && stream.match(nextToken.text)) {
-      let valueClass = getStyleNameByTag(tags.keyword);
-      console.log(nextToken);
-      switch (nextToken.type) {
+  private convertCurrentTokenToCodeMirrorStyle() {
+    if (
+      this.currToken.type !== jsoniqLexer.EOF &&
+      this.stream.match(this.currToken.text)
+    ) {
+      let valueClass;
+      switch (this.currToken.type) {
         case jsoniqLexer.T__1:
           // $ symbol
-          valueClass = getStyleNameByTag(tags.variableName);
+          valueClass = this.getStyleNameByTag(tags.variableName);
           break;
         case jsoniqLexer.NCName:
-          valueClass = getStyleNameByTag(tags.variableName);
+          valueClass = this.getStyleNameByTag(tags.variableName);
           break;
         case jsoniqLexer.Kversion:
         case jsoniqLexer.Kcontext:
@@ -133,35 +180,36 @@ export const jsoniqLanguageDefinition = StreamLanguage.define({
         case jsoniqLexer.Kcontext_dollars:
         case jsoniqLexer.Ktrue:
         case jsoniqLexer.Kfalse:
-          valueClass = getStyleNameByTag(tags.keyword);
+        case jsoniqLexer.NullLiteral:
+          valueClass = this.getStyleNameByTag(tags.keyword);
           break;
         case jsoniqLexer.XQComment:
-          valueClass = getStyleNameByTag(tags.comment);
+          valueClass = this.getStyleNameByTag(tags.comment);
           break;
         case jsoniqLexer.STRING:
-          valueClass = getStyleNameByTag(tags.string);
+          valueClass = this.getStyleNameByTag(tags.string);
           break;
         case jsoniqLexer.Literal:
         case jsoniqLexer.NumericLiteral:
         case jsoniqLexer.DoubleLiteral:
         case jsoniqLexer.IntegerLiteral:
         case jsoniqLexer.DecimalLiteral:
-          valueClass = getStyleNameByTag(tags.number);
+          valueClass = this.getStyleNameByTag(tags.number);
           break;
         case jsoniqLexer.T__33:
         case jsoniqLexer.T__34:
           // [] brackets
-          valueClass = getStyleNameByTag(tags.squareBracket);
+          valueClass = this.getStyleNameByTag(tags.squareBracket);
           break;
         case jsoniqLexer.T__2:
         case jsoniqLexer.T__3:
           // {} braces
-          valueClass = getStyleNameByTag(tags.brace);
+          valueClass = this.getStyleNameByTag(tags.brace);
           break;
         case jsoniqLexer.T__4:
         case jsoniqLexer.T__5:
           // () parenthesis
-          valueClass = getStyleNameByTag(tags.paren);
+          valueClass = this.getStyleNameByTag(tags.paren);
           break;
         case jsoniqLexer.T__27:
         case jsoniqLexer.T__28:
@@ -170,38 +218,70 @@ export const jsoniqLanguageDefinition = StreamLanguage.define({
         case jsoniqLexer.T__31:
         case jsoniqLexer.Kassign:
           // +, -, *, div, mod, :=
-          valueClass = getStyleNameByTag(tags.operator);
+          valueClass = this.getStyleNameByTag(tags.operator);
           break;
         case jsoniqLexer.T__9:
-        case jsoniqLexer.T__35:
         case jsoniqLexer.T__0:
-          // ",", ".", ";"
-          valueClass = getStyleNameByTag(tags.punctuation);
+          // ",",  ";"
+          valueClass = this.getStyleNameByTag(tags.separator);
+          break;
+        case jsoniqLexer.T__35:
+          // "."
+          valueClass = this.getStyleNameByTag(tags.derefOperator);
+          this.state.tokenValueClassFromPreviousTokenContext =
+            this.getStyleNameByTag(tags.propertyName);
+          this.state.hasTokenValueClassFromPreviousToken = true;
           break;
         case jsoniqLexer.Kfunction:
         case jsoniqLexer.Kvariable:
         case jsoniqLexer.Klet:
-          valueClass = getStyleNameByTag(tags.keyword);
+          valueClass = this.getStyleNameByTag(tags.keyword);
           break;
         case jsoniqLexer.Knamespace:
         case jsoniqLexer.Kexternal:
-          valueClass = getStyleNameByTag(tags.namespace);
+          valueClass = this.getStyleNameByTag(tags.namespace);
           break;
         case jsoniqLexer.Kmodule:
-          valueClass = getStyleNameByTag(tags.moduleKeyword);
+          valueClass = this.getStyleNameByTag(tags.moduleKeyword);
           break;
         case jsoniqLexer.T__8:
           // "%"
-          valueClass = getStyleNameByTag(tags.annotation);
+          valueClass = this.getStyleNameByTag(tags.annotation);
           break;
         default:
-          valueClass = getStyleNameByTag(tags.variableName);
+          valueClass = this.getStyleNameByTag(tags.variableName);
           break;
       }
       return valueClass;
     } else {
-      stream.next();
+      this.stream.next();
       return null;
     }
+  }
+}
+
+export const jsoniqLanguageDefinition = StreamLanguage.define({
+  startState: (_) => {
+    return {
+      tokenValueClassFromPreviousTokenContext: "",
+      hasTokenValueClassFromPreviousToken: false,
+    };
+  },
+  token: (stream, state: TokenizerState) => {
+    const tokenizier = new Tokenizer(stream.string);
+    const tokenConverter = new TokenToCodeMirrorStyleConverter(
+      tokenizier.findCurrentToken(stream.pos),
+      stream,
+      state
+    );
+    return tokenConverter.convertTokenToCodeMirrorStyle();
+  },
+  copyState(state) {
+    return {
+      tokenValueClassFromPreviousTokenContext:
+        state.tokenValueClassFromPreviousTokenContext,
+      hasTokenValueClassFromPreviousToken:
+        state.hasTokenValueClassFromPreviousToken,
+    };
   },
 });

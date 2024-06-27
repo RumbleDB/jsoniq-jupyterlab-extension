@@ -1,23 +1,16 @@
 import { ILSPCodeExtractorsManager } from "@jupyterlab/lsp";
 import { JSONiqExtractor } from "./extractor/extractors.js";
 import { IEditorLanguageRegistry } from "@jupyterlab/codemirror";
-import { jsoniqLanguageDefinition } from "./code_mirror_configuration/tokenizer.js";
-import { LanguageSupport } from "@codemirror/language";
+import { RegisterJSONiqInCodeMirror } from "./code_mirror_configuration/register-language.js";
 const PLUGIN_ID = "davidbuzatu-marian/jsoniq-jupyter-plugin:jsoniq";
 const plugin = {
     id: PLUGIN_ID,
     requires: [ILSPCodeExtractorsManager, IEditorLanguageRegistry],
     activate: (_app, extractors, codeMirrorRecognizedLanguages) => {
         const jsoniqExtractor = new JSONiqExtractor(extractors);
+        const jsoniqLanguageRegister = new RegisterJSONiqInCodeMirror(codeMirrorRecognizedLanguages);
         jsoniqExtractor.registerExtractor();
-        codeMirrorRecognizedLanguages.addLanguage({
-            name: "jsoniq",
-            displayName: "JSONiq",
-            mime: ["application/jsoniq", "text/jsoniq", "text/x-jsoniq"],
-            extensions: [".jq"],
-            support: new LanguageSupport(jsoniqLanguageDefinition),
-        });
-        console.log("Activated plugin!");
+        jsoniqLanguageRegister.registerJSONiqLanguage();
     },
     autoStart: true,
 };
