@@ -1,1 +1,0 @@
-{"version":3,"file":"extractors.js","sourceRoot":"","sources":["../../extractors/extractors.ts"],"names":[],"mappings":";;;AAAA,gEAAyE;AAE5D,QAAA,eAAe,GAAG,IAAI,2CAA0B,CAAC;IAC5D,QAAQ,EAAE,QAAQ;IAClB,OAAO,EAAE,4BAA4B;IACrC,oBAAoB,EAAE,CAAC,CAAC,CAAC;IACzB,YAAY,EAAE,IAAI;IAClB,aAAa,EAAE,IAAI;CACpB,CAAC,CAAC"}
