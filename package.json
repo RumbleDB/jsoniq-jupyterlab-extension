@@ -7,7 +7,8 @@
   "scripts": {
     "build": "tsc -b",
     "build-ext": "jupyter labextension build .",
-    "antlr4": "antlr4ng -Dlanguage=TypeScript ./src/grammar/jsoniq.g4"
+    "antlr4": "antlr4ng -Dlanguage=TypeScript ./src/grammar/jsoniq.g4",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -33,7 +34,10 @@
   },
   "devDependencies": {
     "@jupyterlab/builder": "^4.2.2",
+    "@types/jest": "^29.5.12",
     "antlr4ng-cli": "^2.0.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.5",
     "ts-loader": "^9.5.1",
     "typescript": "^5.5.2"
   },

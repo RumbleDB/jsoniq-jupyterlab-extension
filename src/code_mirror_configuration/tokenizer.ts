@@ -58,7 +58,7 @@ class Tokenizer {
   }
 }
 
-class TokenToCodeMirrorStyleConverter {
+export class TokenToCodeMirrorStyleConverter {
   private currToken;
   private stream;
   private state;
