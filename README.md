@@ -1,15 +1,23 @@
 # jsoniq-jupyterlab-extension
 
-`jsoniq-jupyterlab-extension` is a JupyterLab extension that adds support for Python magics to interact with the JSONiq language server. This extension allows users to take advantage of JSONiq diagnostics display.
-In the future, this extension will also support syntax highlighting through CodeMirror.
+`jsoniq-jupyterlab-extension` is a JupyterLab extension that adds support for Python magics to interact with the JSONiq language server. This extension allows users to enjoy language features of jsoniq cells within Python notebooks or `.jq` files. With the extension, syntax highlighting with CodeMirror is also enabled for jsoniq cells using the `%%jsoniq` magic or `.jq` files.
 
 ## Features
 
-- **JSONiq LSP integration** - the extension provides seamless integration for the LSP to execute within Python cells with the `%%jsoniq` magic.
+- **JSONiq LSP integration** - the extension provides integration for the LSP to execute within Python cells with the `%%jsoniq` magic.
+- **Synax highlighting** - syntax highlighting is automatically enabled for `%%jsoniq` magic cells within Python notebooks, and can be enabled for `.jq` files using the language selector of Jupyter.
 
 ## Installation
 
-To install the `jsoniq-jupyterlab-extension`, you can use `npm` or `yarn`. Make sure you have JupyterLab installed before proceeding.
+To install the `jsoniq-jupyterlab-extension`, you can use `npm` or `yarn`. Make sure you have JupyterLab and the JupyterLSP extension installed before proceeding.
+
+To install JupyterLSP, run:
+
+```sh
+pip install jupyter-lsp
+```
+
+To install the JSONiq Jupyter Extension, run:
 
 ```sh
 # Using npm
@@ -19,7 +27,7 @@ npm install jsoniq-jupyterlab-extension
 yarn add jsoniq-jupyterlab-extension
 ```
 
-After installing the package, you need to enable the extension in JupyterLab:
+After installing the package, you may need to enable the extension in JupyterLab:
 
 ```sh
 jupyter labextension enable jsoniq-jupyterlab-extension
@@ -27,7 +35,7 @@ jupyter labextension enable jsoniq-jupyterlab-extension
 
 ## Usage
 
-Once the extension is installed and enabled, the extension automatically recognizes jsoniq magic cells.
+Once the extension is installed and enabled, the extension automatically recognizes jsoniq magic cells and files.
 
 ### Example
 
@@ -38,7 +46,7 @@ where $book.price lt 20
 return $book.title
 ```
 
-This example demonstrates how to run a JSONiq query to find the titles of books priced below $20 from a JSON file named `books.json`.
+This cell should become highlighted and language features should be enabled.
 
 ## Development
 
@@ -75,11 +83,20 @@ To contribute to the development of `jsoniq-jupyterlab-extension`, follow these 
    jupyter lab
    ```
 
+## Building and testing the extension
+
+To build the project for production, the following commands build the JavaScript files, build the Jupyter extension and install this result for local testing.
+
+```sh
+npm run build && npm run build-ext && jupyter labextension install .
+```
+
 ## Project Structure
 
 - `src/`: Contains the source code of the extension.
-- `dest/extractors/plugin.js`: The main entry point for the extension.
+- `dest/plugin.js`: The main entry point for the extension after building.
 - `package.json`: Contains the configuration and dependencies for the extension.
+- `tests/`: Contains a set of tests relating to syntax highlighting.
 
 ## Contributing
 
