@@ -41,6 +41,9 @@
     "ts-loader": "^9.5.1",
     "typescript": "^5.5.2"
   },
+  "files": [
+    "/dest"
+  ],
   "jupyterlab": {
     "extension": true,
     "outputDir": "./labextension"
