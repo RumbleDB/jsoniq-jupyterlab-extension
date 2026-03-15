@@ -2,7 +2,7 @@ import { RegExpForeignCodeExtractor } from "@jupyter-lsp/jupyterlab-lsp";
 import { ILSPCodeExtractorsManager } from "@jupyterlab/lsp";
 
 export class JSONiqExtractor {
-    private extractorManager: any;
+    private extractorManager: ILSPCodeExtractorsManager;
     constructor(extractorManager: ILSPCodeExtractorsManager) {
         this.extractorManager = extractorManager;
     }
