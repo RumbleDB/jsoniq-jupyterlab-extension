@@ -6,13 +6,14 @@ import { ILSPCodeExtractorsManager } from "@jupyterlab/lsp";
 import { JSONiqExtractor } from "./extractor/extractors.js";
 import { IEditorLanguageRegistry } from "@jupyterlab/codemirror";
 import { RegisterJSONiqInCodeMirror } from "./code_mirror_configuration/register-language.js";
+import { jsoniqIcon } from "./icon.js";
 
 const PLUGIN_ID = "davidbuzatu-marian/jsoniq-jupyter-plugin:jsoniq";
 const plugin: JupyterFrontEndPlugin<void> = {
     id: PLUGIN_ID,
     requires: [ILSPCodeExtractorsManager, IEditorLanguageRegistry],
     activate: (
-        _app: JupyterFrontEnd,
+        app: JupyterFrontEnd,
         extractors: ILSPCodeExtractorsManager,
         codeMirrorRecognizedLanguages: IEditorLanguageRegistry
     ) => {
@@ -20,6 +21,15 @@ const plugin: JupyterFrontEndPlugin<void> = {
         const jsoniqLanguageRegister = new RegisterJSONiqInCodeMirror(
             codeMirrorRecognizedLanguages
         );
+
+        app.docRegistry.addFileType({
+            name: "jsoniq",
+            displayName: "JSONiq",
+            extensions: [".jq"],
+            mimeTypes: ["text/x-jsoniq"],
+            icon: jsoniqIcon,
+        });
+
         jsoniqExtractor.registerExtractor();
         jsoniqLanguageRegister.registerJSONiqLanguage();
     },

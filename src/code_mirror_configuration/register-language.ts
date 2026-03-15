@@ -14,7 +14,7 @@ export class RegisterJSONiqInCodeMirror {
             name: "jsoniq",
             displayName: "JSONiq",
             mime: ["application/jsoniq", "text/jsoniq", "text/x-jsoniq"],
-            extensions: [".jq"],
+            extensions: ["jq"],
             support: new LanguageSupport(jsoniqLanguageDefinition),
         });
     }
