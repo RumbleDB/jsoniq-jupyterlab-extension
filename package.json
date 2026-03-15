@@ -1,51 +1,51 @@
 {
-  "name": "jsoniq-jupyterlab-extension",
-  "version": "1.0.2",
-  "description": "JupyterLab extension to support JSONiq magic within python cells. This extension is required to get the JSONiq LSP functionality.",
-  "main": "dest/plugin.js",
-  "type": "module",
-  "scripts": {
-    "build": "tsc -b",
-    "build-ext": "jupyter labextension build .",
-    "antlr4": "antlr4ng -Dlanguage=TypeScript ./src/grammar/jsoniq.g4",
-    "test": "jest"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/DavidBuzatu-Marian/jsoniq-jupyter-plugin-extractors.git"
-  },
-  "keywords": [
-    "jsoniq"
-  ],
-  "author": "JSONiq Development Team",
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/DavidBuzatu-Marian/jsoniq-jupyter-plugin-extractors/issues"
-  },
-  "homepage": "https://github.com/DavidBuzatu-Marian/jsoniq-jupyter-plugin-extractors#readme",
-  "dependencies": {
-    "@codemirror/language": "^6.10.2",
-    "@jupyter-lsp/jupyterlab-lsp": "^5.1.0",
-    "@jupyterlab/application": "^4.2.2",
-    "@jupyterlab/codemirror": "^4.2.2",
-    "@jupyterlab/lsp": "^4.2.2",
-    "@types/node": "^20.14.9",
-    "antlr4ng": "^3.0.4"
-  },
-  "devDependencies": {
-    "@jupyterlab/builder": "^4.2.2",
-    "@types/jest": "^29.5.12",
-    "antlr4ng-cli": "^2.0.0",
-    "jest": "^29.7.0",
-    "ts-jest": "^29.1.5",
-    "ts-loader": "^9.5.1",
-    "typescript": "^5.5.2"
-  },
-  "files": [
-    "/dest"
-  ],
-  "jupyterlab": {
-    "extension": true,
-    "outputDir": "./labextension"
-  }
+    "name": "jsoniq-jupyterlab-extension",
+    "version": "1.0.2",
+    "description": "JupyterLab extension to support JSONiq magic within python cells. This extension is required to get the JSONiq LSP functionality.",
+    "main": "dest/plugin.js",
+    "type": "module",
+    "scripts": {
+        "build": "tsc -b",
+        "build-ext": "jupyter labextension build .",
+        "antlr4": "antlr4ng -Dlanguage=TypeScript ./src/grammar/jsoniq.g4",
+        "test": "jest"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/DavidBuzatu-Marian/jsoniq-jupyter-plugin-extractors.git"
+    },
+    "keywords": [
+        "jsoniq"
+    ],
+    "author": "JSONiq Development Team",
+    "license": "Apache-2.0",
+    "bugs": {
+        "url": "https://github.com/DavidBuzatu-Marian/jsoniq-jupyter-plugin-extractors/issues"
+    },
+    "homepage": "https://github.com/DavidBuzatu-Marian/jsoniq-jupyter-plugin-extractors#readme",
+    "dependencies": {
+        "@codemirror/language": "^6.10.2",
+        "@jupyter-lsp/jupyterlab-lsp": "^5.1.0",
+        "@jupyterlab/application": "^4.2.2",
+        "@jupyterlab/codemirror": "^4.2.2",
+        "@jupyterlab/lsp": "^4.2.2",
+        "@types/node": "^20.14.9",
+        "antlr-ng": "^1.0.10",
+        "antlr4ng": "^3.0.4"
+    },
+    "devDependencies": {
+        "@jupyterlab/builder": "^4.2.2",
+        "@types/jest": "^29.5.12",
+        "jest": "^29.7.0",
+        "ts-jest": "^29.1.5",
+        "ts-loader": "^9.5.1",
+        "typescript": "^5.5.2"
+    },
+    "files": [
+        "/dest"
+    ],
+    "jupyterlab": {
+        "extension": true,
+        "outputDir": "./labextension"
+    }
 }
