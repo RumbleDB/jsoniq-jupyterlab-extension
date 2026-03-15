@@ -9,3 +9,4 @@ out.txt
 jsoniq_jupyter_lsp.egg-info
 .virtual_documents/
 .yarn
+tsconfig.tsbuildinfo
