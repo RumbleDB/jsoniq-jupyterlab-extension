@@ -4,9 +4,15 @@
     "description": "JupyterLab extension to support JSONiq magic within python cells. This extension is required to get the JSONiq LSP functionality.",
     "main": "dist/plugin.js",
     "scripts": {
-        "build": "tsc -b",
-        "build-ext": "jupyter labextension build .",
-        "build:all": "pnpm run build && pnpm run build-ext",
+        "build:lib": "tsc --sourceMap",
+        "build:lib:prod": "tsc",
+        "build:labextension": "jupyter labextension build .",
+        "build:labextension:dev": "jupyter labextension build --development True .",
+        "build": "run-s build:lib build:labextension:dev",
+        "build:prod": "run-s build:lib:prod build:labextension",
+        "watch": "run-p watch:src watch:labextension",
+        "watch:src": "tsc -w --sourceMap",
+        "watch:labextension": "jupyter labextension watch .",
         "link": "jupyter labextension link .",
         "antlr4": "antlr-ng -Dlanguage=TypeScript ./src/grammar/jsoniq.g4",
         "test": "jest"
@@ -41,6 +47,7 @@
         "@jupyterlab/builder": "^4.5.6",
         "@types/jest": "^30.0.0",
         "jest": "^30.3.0",
+        "npm-run-all2": "^8.0.4",
         "ts-jest": "^29.4.6",
         "ts-loader": "^9.5.4",
         "typescript": "^5.9.3"
