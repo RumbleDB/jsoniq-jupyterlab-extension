@@ -6,6 +6,8 @@
     "scripts": {
         "build": "tsc -b",
         "build-ext": "jupyter labextension build .",
+        "build:all": "pnpm run build && pnpm run build-ext",
+        "link": "jupyter labextension link .",
         "antlr4": "antlr-ng -Dlanguage=TypeScript ./src/grammar/jsoniq.g4",
         "test": "jest"
     },
