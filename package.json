@@ -25,6 +25,7 @@
     "homepage": "https://github.com/DavidBuzatu-Marian/jsoniq-jupyter-plugin-extractors#readme",
     "dependencies": {
         "@codemirror/language": "^6.12.2",
+        "@jest/globals": "^30.3.0",
         "@jupyter-lsp/jupyterlab-lsp": "^5.2.0",
         "@jupyterlab/application": "^4.5.6",
         "@jupyterlab/codemirror": "^4.5.6",

@@ -11,6 +11,9 @@ importers:
       '@codemirror/language':
         specifier: ^6.12.2
         version: 6.12.2
+      '@jest/globals':
+        specifier: ^30.3.0
+        version: 30.3.0
       '@jupyter-lsp/jupyterlab-lsp':
         specifier: ^5.2.0
         version: 5.2.0(react@18.3.1)
