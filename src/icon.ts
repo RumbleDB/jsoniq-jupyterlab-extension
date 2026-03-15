@@ -5,6 +5,6 @@ import { LabIcon } from "@jupyterlab/ui-components";
 import jsoniqSVG from "../images/JSONiq.svg";
 
 export const jsoniqIcon = new LabIcon({
-  svgstr: jsoniqSVG,
-  name: `${NS}:jsoniq`,
+    svgstr: jsoniqSVG,
+    name: `${NS}:jsoniq`,
 });
