@@ -458,10 +458,14 @@ version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "jupyter" },
+    { name = "jupyter-lsp" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "jupyter", specifier = ">=1.1.1" }]
+requires-dist = [
+    { name = "jupyter", specifier = ">=1.1.1" },
+    { name = "jupyter-lsp", specifier = ">=2.3.0" },
+]
 
 [[package]]
 name = "jsonpointer"
