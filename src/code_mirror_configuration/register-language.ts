@@ -13,8 +13,9 @@ export class RegisterJSONiqInCodeMirror {
         this.codeMirrorRecognizedLanguages.addLanguage({
             name: "jsoniq",
             displayName: "JSONiq",
-            mime: ["application/jsoniq", "text/jsoniq", "text/x-jsoniq"],
+            mime: "text/x-jsoniq",
             extensions: ["jq"],
+            filename: /\.jq$/,
             support: new LanguageSupport(jsoniqLanguageDefinition),
         });
     }

@@ -52,17 +52,17 @@ class Tokenizer {
         return "";
     }
 
-    public findCurrentToken(streamPos: number): Token {
+    public findCurrentToken(streamPos: number): Token | undefined {
         return this.tokens.filter((t) => t.startIndex >= streamPos)[0];
     }
 }
 
 export class TokenToCodeMirrorStyleConverter {
-    private currToken;
-    private stream;
-    private state;
+    private currToken: Token | undefined;
+    private stream: StringStream;
+    private state: TokenizerState;
 
-    constructor(currToken: Token, stream: StringStream, state: TokenizerState) {
+    constructor(currToken: Token | undefined, stream: StringStream, state: TokenizerState) {
         this.currToken = currToken;
         this.stream = stream;
         this.state = state;
@@ -80,6 +80,7 @@ export class TokenToCodeMirrorStyleConverter {
     public convertTokenToCodeMirrorStyle() {
         if (
             this.state.hasTokenValueClassFromPreviousToken &&
+            this.currToken &&
             this.stream.match(this.currToken.text)
         ) {
             // Some previous context set the current token's class
@@ -92,6 +93,7 @@ export class TokenToCodeMirrorStyleConverter {
 
     private convertCurrentTokenToCodeMirrorStyle() {
         if (
+            this.currToken &&
             this.currToken.type !== jsoniqLexer.EOF &&
             this.stream.match(this.currToken.text)
         ) {
@@ -165,6 +167,7 @@ export class TokenToCodeMirrorStyleConverter {
                 case jsoniqLexer.Kordering:
                 case jsoniqLexer.Kordered:
                 case jsoniqLexer.Kcase:
+                case jsoniqLexer.Kcount:
                 case jsoniqLexer.Kdefault:
                 case jsoniqLexer.Kunordered:
                 case jsoniqLexer.Keq:
