@@ -12,8 +12,8 @@
         "build:prod": "run-s build:lib:prod build:labextension",
         "watch": "run-p watch:src watch:labextension",
         "watch:src": "tsc -w --sourceMap",
-        "watch:labextension": "jupyter labextension watch .",
-        "link": "jupyter labextension link .",
+        "watch:labextension": "uv run jupyter labextension watch .",
+        "link": "uv run jupyter labextension link .",
         "antlr4": "antlr-ng -Dlanguage=TypeScript ./src/grammar/jsoniq.g4",
         "test": "jest"
     },
