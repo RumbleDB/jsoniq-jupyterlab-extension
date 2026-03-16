@@ -14,9 +14,6 @@ importers:
       '@jest/globals':
         specifier: ^30.3.0
         version: 30.3.0
-      '@jupyter-lsp/jupyterlab-lsp':
-        specifier: ^5.2.0
-        version: 5.2.0(react@18.3.1)
       '@jupyterlab/application':
         specifier: ^4.5.6
         version: 4.5.6(react@18.3.1)
@@ -473,21 +470,6 @@ packages:
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
 
-  '@jupyter-lsp/code-jumpers@2.1.0':
-    resolution: {integrity: sha512-9MdsZCM62zX5IGU7Tvy12gr2bLl11c4bT3YoH+ZJu1FpksgJkh0DxBBB5lK7s5zy/mADGpuTlAEKUSwyiNyccg==}
-
-  '@jupyter-lsp/completion-theme@4.1.0':
-    resolution: {integrity: sha512-+Oid8D+u2xOiGH4TM2F25cPj3fElKCaPDZh81e7BgZVs1Ck8rH8O5ux1wWvW7a5Fy5eb8MVA1fWFzoOUMXlH+w==}
-
-  '@jupyter-lsp/jupyterlab-lsp@5.2.0':
-    resolution: {integrity: sha512-LkNsjvkNCdfbEoRysE0oPxH0JDtU+tjuPWtUY9neFi/slSp+Q9HbQrQxTnU0BmBoodxaemwHR8ABxGxLILNauA==}
-
-  '@jupyter-lsp/theme-material@3.0.0':
-    resolution: {integrity: sha512-B2ggTpqPmdkHShCFxgsE1CqTOWYvkJPvg7HFUm40MGjJ+OqmzeQQx4QS25RTgxEpCzEtBPTU0i9GSW3CSfID6w==}
-
-  '@jupyter-lsp/theme-vscode@3.0.0':
-    resolution: {integrity: sha512-waUUKqM/8n2C7zppwD02vhxIRm4vPGOKWtKKcmJKjgBMdDG7a9kPt9IIvGqT8VMp6uKpotlT5G7iIfCbNwNDtQ==}
-
   '@jupyter/react-components@0.16.7':
     resolution: {integrity: sha512-BKIPkJ9V011uhtdq1xBOu2M3up59CqsRbDS4aq8XhnHR4pwqfRV6k6irE5YBOETCoIwWZZ5RZO+cJcZ3DcsT5A==}
 
@@ -723,12 +705,6 @@ packages:
     engines: {node: '>=14'}
     peerDependencies:
       react: ^16.14.0 || >=17
-
-  '@rjsf/validator-ajv8@5.24.13':
-    resolution: {integrity: sha512-oWHP7YK581M8I5cF1t+UXFavnv+bhcqjtL1a7MG/Kaffi0EwhgcYjODrD8SsnrhncsEYMqSECr4ZOEoirnEUWw==}
-    engines: {node: '>=14'}
-    peerDependencies:
-      '@rjsf/utils': ^5.24.x
 
   '@sinclair/typebox@0.27.10':
     resolution: {integrity: sha512-MTBk/3jGLNB2tVxv6uLlFh1iu64iYOQ2PbdOSK3NW8JZsmlaOh2q6sdtKowBhfw8QFLmYNzTW4/oK4uATIi6ZA==}
@@ -3918,33 +3894,6 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@jupyter-lsp/code-jumpers@2.1.0': {}
-
-  '@jupyter-lsp/completion-theme@4.1.0': {}
-
-  '@jupyter-lsp/jupyterlab-lsp@5.2.0(react@18.3.1)':
-    dependencies:
-      '@jupyter-lsp/code-jumpers': 2.1.0
-      '@jupyter-lsp/completion-theme': 4.1.0
-      '@jupyter-lsp/theme-material': 3.0.0
-      '@jupyter-lsp/theme-vscode': 3.0.0
-      '@jupyterlab/lsp': 4.5.6(react@18.3.1)
-      '@rjsf/utils': 5.24.13(react@18.3.1)
-      '@rjsf/validator-ajv8': 5.24.13(@rjsf/utils@5.24.13(react@18.3.1))
-      lodash.mergewith: 4.6.2
-    transitivePeerDependencies:
-      - bufferutil
-      - react
-      - utf-8-validate
-
-  '@jupyter-lsp/theme-material@3.0.0':
-    dependencies:
-      '@jupyter-lsp/completion-theme': 4.1.0
-
-  '@jupyter-lsp/theme-vscode@3.0.0':
-    dependencies:
-      '@jupyter-lsp/completion-theme': 4.1.0
-
   '@jupyter/react-components@0.16.7':
     dependencies:
       '@jupyter/web-components': 0.16.7
@@ -4748,14 +4697,6 @@ snapshots:
       lodash-es: 4.17.23
       react: 18.3.1
       react-is: 18.3.1
-
-  '@rjsf/validator-ajv8@5.24.13(@rjsf/utils@5.24.13(react@18.3.1))':
-    dependencies:
-      '@rjsf/utils': 5.24.13(react@18.3.1)
-      ajv: 8.18.0
-      ajv-formats: 2.1.1(ajv@8.18.0)
-      lodash: 4.17.23
-      lodash-es: 4.17.23
 
   '@sinclair/typebox@0.27.10': {}
 

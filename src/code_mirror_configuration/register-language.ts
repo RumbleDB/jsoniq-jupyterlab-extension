@@ -1,6 +1,7 @@
 import { LanguageSupport } from "@codemirror/language";
 import { IEditorLanguageRegistry } from "@jupyterlab/codemirror";
 import { jsoniqLanguageDefinition } from "./tokenizer.js";
+import { JSONIQ_LANGUAGE, JSONIQ_LANGUAGE_DISPLAY_NAME, JSONIQ_MIME_TYPE, JSONIQ_EXTENSION } from "../const.js";
 
 export class RegisterJSONiqInCodeMirror {
     private codeMirrorRecognizedLanguages;
@@ -11,11 +12,10 @@ export class RegisterJSONiqInCodeMirror {
 
     public registerJSONiqLanguage() {
         this.codeMirrorRecognizedLanguages.addLanguage({
-            name: "jsoniq",
-            displayName: "JSONiq",
-            mime: "text/x-jsoniq",
-            extensions: ["jq"],
-            filename: /\.jq$/,
+            name: JSONIQ_LANGUAGE,
+            displayName: JSONIQ_LANGUAGE_DISPLAY_NAME,
+            mime: JSONIQ_MIME_TYPE,
+            extensions: [JSONIQ_EXTENSION],
             support: new LanguageSupport(jsoniqLanguageDefinition),
         });
     }

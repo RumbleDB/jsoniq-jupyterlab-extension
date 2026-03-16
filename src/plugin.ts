@@ -3,28 +3,26 @@ import {
     JupyterFrontEndPlugin,
 } from "@jupyterlab/application";
 import { ILSPCodeExtractorsManager } from "@jupyterlab/lsp";
-import { JSONiqExtractor } from "./extractor/extractors.js";
 import { IEditorLanguageRegistry } from "@jupyterlab/codemirror";
 import { RegisterJSONiqInCodeMirror } from "./code_mirror_configuration/register-language.js";
 import { jsoniqIcon } from "./icon.js";
 import { INotebookTracker } from "@jupyterlab/notebook";
 import { Cell, CodeCell } from "@jupyterlab/cells";
+import { JSONIQ_EXTENSION, JSONIQ_LANGUAGE, JSONIQ_LANGUAGE_DISPLAY_NAME, JSONIQ_MIME_TYPE, JUPYTER_PLUGIN_ID } from "./const.js";
 
 function highlightJSONiqCell(cell: Cell | null, registry?: IEditorLanguageRegistry): void {
     if (cell instanceof CodeCell) {
         const contents = cell.model.sharedModel.getSource();
         const isJSONiq = contents.trim().startsWith("%%jsoniq") || contents.trim().startsWith("%%JSONiq");
-        
+
         if (isJSONiq) {
             const jsoniqMime = "text/x-jsoniq";
             if (cell.model.mimeType !== jsoniqMime) {
                 cell.model.mimeType = jsoniqMime;
-                // Update metadata for other extensions/features
                 cell.model.setMetadata('language', 'jsoniq');
                 console.log("Cell mode changed to JSONiq");
             }
         } else if (cell.model.mimeType === "text/x-jsoniq") {
-            // Find default language for the cell if registry is provided
             let defaultMime = "text/x-python";
             if (registry) {
                 const info = registry.findBest("python");
@@ -39,9 +37,8 @@ function highlightJSONiqCell(cell: Cell | null, registry?: IEditorLanguageRegist
     }
 }
 
-const PLUGIN_ID = "davidbuzatu-marian/jsoniq-jupyter-plugin:jsoniq";
 const plugin: JupyterFrontEndPlugin<void> = {
-    id: PLUGIN_ID,
+    id: JUPYTER_PLUGIN_ID,
     requires: [ILSPCodeExtractorsManager, IEditorLanguageRegistry, INotebookTracker],
     activate: (
         app: JupyterFrontEnd,
@@ -49,22 +46,20 @@ const plugin: JupyterFrontEndPlugin<void> = {
         codeMirrorRecognizedLanguages: IEditorLanguageRegistry,
         tracker: INotebookTracker
     ) => {
-        // const jsoniqExtractor = new JSONiqExtractor(extractors);
         const jsoniqLanguageRegister = new RegisterJSONiqInCodeMirror(
             codeMirrorRecognizedLanguages
         );
 
         app.docRegistry.addFileType({
-            name: "jsoniq",
-            displayName: "JSONiq",
+            name: JSONIQ_LANGUAGE,
+            displayName: JSONIQ_LANGUAGE_DISPLAY_NAME,
             contentType: "code",
             fileFormat: "text",
-            extensions: [".jq"],
-            mimeTypes: ["text/x-jsoniq"],
+            extensions: [JSONIQ_EXTENSION],
+            mimeTypes: [JSONIQ_MIME_TYPE],
             icon: jsoniqIcon,
         });
 
-        // jsoniqExtractor.registerExtractor();
         jsoniqLanguageRegister.registerJSONiqLanguage();
 
         const setupCell = (cell: Cell) => {
@@ -73,7 +68,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
                 console.log("Cell is not a CodeCell");
                 return;
             }
-            
+
             // Avoid duplicate setup
             if ((cell as any)._jsoniqSetup) {
                 console.log("Cell is already setup");
@@ -82,7 +77,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
             (cell as any)._jsoniqSetup = true;
 
             highlightJSONiqCell(cell, codeMirrorRecognizedLanguages);
-            
+
             // Listen for changes in the cell content to update highlighting live
             cell.model.sharedModel.changed.connect(() => {
                 highlightJSONiqCell(cell, codeMirrorRecognizedLanguages);
