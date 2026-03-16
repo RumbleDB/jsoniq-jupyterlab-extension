@@ -3,7 +3,7 @@ import {
     JupyterFrontEndPlugin,
 } from "@jupyterlab/application";
 import { CodeMirrorEditor, IEditorLanguageRegistry } from "@jupyterlab/codemirror";
-import { RegisterJSONiqInCodeMirror } from "./code_mirror_configuration/register-language.js";
+import { registerJSONiqLanguage } from "./code-mirror/register-language.js";
 import { jsoniqIcon } from "./icon.js";
 import { INotebookTracker, NotebookPanel } from "@jupyterlab/notebook";
 import { Cell, CodeCell, ICellModel } from "@jupyterlab/cells";
@@ -151,10 +151,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
         codeMirrorRecognizedLanguages: IEditorLanguageRegistry,
         tracker: INotebookTracker
     ) => {
-        const jsoniqLanguageRegister = new RegisterJSONiqInCodeMirror(
-            codeMirrorRecognizedLanguages
-        );
-
+        registerJSONiqLanguage(codeMirrorRecognizedLanguages);
         app.docRegistry.addFileType({
             name: JSONIQ_LANGUAGE,
             displayName: JSONIQ_LANGUAGE_DISPLAY_NAME,
@@ -164,8 +161,6 @@ const plugin: JupyterFrontEndPlugin<void> = {
             mimeTypes: [JSONIQ_MIME_TYPE],
             icon: jsoniqIcon,
         });
-
-        jsoniqLanguageRegister.registerJSONiqLanguage();
 
         const initializedPanels = new WeakSet<NotebookPanel>();
 
