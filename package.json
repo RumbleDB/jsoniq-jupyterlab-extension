@@ -6,8 +6,8 @@
     "scripts": {
         "build:lib": "tsc --sourceMap",
         "build:lib:prod": "tsc",
-        "build:labextension": "jupyter labextension build .",
-        "build:labextension:dev": "jupyter labextension build --development True .",
+        "build:labextension": "uv run jupyter labextension build .",
+        "build:labextension:dev": "uv run jupyter labextension build --development True .",
         "build": "run-s build:lib build:labextension:dev",
         "build:prod": "run-s build:lib:prod build:labextension",
         "watch": "run-p watch:src watch:labextension",
