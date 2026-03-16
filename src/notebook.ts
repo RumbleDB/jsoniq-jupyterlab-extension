@@ -26,12 +26,10 @@ const shouldRefresh = (cell: Cell): boolean => {
 function refreshEditor(cell: Cell): void {
     if (cell instanceof CodeCell && cell.editor instanceof CodeMirrorEditor && shouldRefresh(cell)) {
         const cmEditor = cell.editor as CodeMirrorEditor;
-        console.log("[JSONiq] Refreshing editor", cell);
 
         try {
             // 1. Force JLab's internal language sync
             if ((cmEditor as any)._onMimeTypeChanged) {
-                console.log("_onMimeTypeChanged");
                 (cmEditor as any)._onMimeTypeChanged();
             }
 
@@ -71,7 +69,6 @@ function updateCellMimeType(cellOrModel: Cell | ICellModel, nbPanel: NotebookPan
 
     if (isJSONiq) {
         if (model.mimeType !== JSONIQ_MIME_TYPE) {
-            console.log(`[JSONiq] Setting MIME type to ${JSONIQ_MIME_TYPE} for cell ${model.id}`);
             model.mimeType = JSONIQ_MIME_TYPE;
         }
         if (cellWidget) {
@@ -119,13 +116,13 @@ function setupNotebookHighlighting(nbPanel: NotebookPanel): void {
         }
 
         // Listen for new cells
-        model.cells.changed.connect((sender, args) => {
+        model.cells.changed.connect((_, args) => {
             if (args.type === 'add') {
                 args.newValues.forEach(cellModel => setupCell(cellModel));
             }
         });
 
-        // // Also check on session ready
+        // Also check on session ready
         nbPanel.sessionContext.ready.then(() => checkAllCells());
         nbPanel.sessionContext.kernelChanged.connect(() => checkAllCells());
     };
