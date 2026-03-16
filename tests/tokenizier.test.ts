@@ -1,6 +1,6 @@
 import { describe, test, expect } from "@jest/globals";
-import { TokenToCodeMirrorStyleConverter } from "../src/code_mirror_configuration/tokenizer.js";
-import { jsoniqLexer } from "../src/grammar/jsoniqLexer.js";
+import { TokenToCodeMirrorStyleConverter } from "../src/code-mirror/tokenizer";
+import { jsoniqLexer } from "../src/grammar/jsoniqLexer";
 import { StringStream } from "@codemirror/language";
 
 function createCurrentToken(
