@@ -8,33 +8,45 @@ importers:
 
   .:
     dependencies:
+      '@codemirror/lang-python':
+        specifier: ^6.2.1
+        version: 6.2.1
+      '@codemirror/lang-sql':
+        specifier: ^6.10.0
+        version: 6.10.0
       '@codemirror/language':
         specifier: ^6.12.2
         version: 6.12.2
+      '@codemirror/state':
+        specifier: ^6.6.0
+        version: 6.6.0
       '@jest/globals':
         specifier: ^30.3.0
         version: 30.3.0
       '@jupyterlab/application':
-        specifier: ^4.5.6
+        specifier: ^4.4.6
         version: 4.5.6(react@18.3.1)
       '@jupyterlab/cells':
-        specifier: ^4.5.6
+        specifier: ^4.4.6
         version: 4.5.6
       '@jupyterlab/codemirror':
-        specifier: ^4.5.6
+        specifier: ^4.4.6
         version: 4.5.6(react@18.3.1)
       '@jupyterlab/lsp':
-        specifier: ^4.5.6
+        specifier: ^4.4.6
         version: 4.5.6(react@18.3.1)
       '@jupyterlab/notebook':
-        specifier: ^4.5.6
+        specifier: ^4.4.6
         version: 4.5.6
       '@jupyterlab/ui-components':
-        specifier: ^4.5.6
+        specifier: ^4.4.6
         version: 4.5.6(react@18.3.1)
       '@lezer/highlight':
         specifier: ^1.2.3
         version: 1.2.3
+      '@types/codemirror':
+        specifier: ^5.60.17
+        version: 5.60.17
       '@types/node':
         specifier: ^25.5.0
         version: 25.5.0
@@ -46,7 +58,7 @@ importers:
         version: 3.0.16
     devDependencies:
       '@jupyterlab/builder':
-        specifier: ^4.5.6
+        specifier: ^4.4.6
         version: 4.5.6
       '@types/jest':
         specifier: ^30.0.0
@@ -740,6 +752,9 @@ packages:
   '@types/babel__traverse@7.28.0':
     resolution: {integrity: sha512-8PvcXf70gTDZBgt9ptxJ8elBeBjcLOAcOtoO/mPJjtji1+CdGbHgm77om1GrsPxsiE+uXIpNSK64UYaIwQXd4Q==}
 
+  '@types/codemirror@5.60.17':
+    resolution: {integrity: sha512-AZq2FIsUHVMlp7VSe2hTfl5w4pcUkoFkM3zVsRKsn1ca8CXRDYvnin04+HP2REkwsxemuHqvDofdlhUWNpbwfw==}
+
   '@types/d3-array@3.2.2':
     resolution: {integrity: sha512-hOLWVbm7uRza0BYXpIIW5pxfrKe0W+D5lrFiAEYR+pb6w3N2SwSMaJbXdUfSEv+dT4MfHBLtn5js0LAWaO6otw==}
 
@@ -877,6 +892,9 @@ packages:
 
   '@types/stack-utils@2.0.3':
     resolution: {integrity: sha512-9aEbYZ3TbYMznPdcdr3SmIrLXwC/AKZXQeCf9Pgao5CKb8CyHuEX5jzWPTkvregvhRJHcpRO6BFoGW9ycaOkYw==}
+
+  '@types/tern@0.23.9':
+    resolution: {integrity: sha512-ypzHFE/wBzh+BlH6rrBgS5I/Z7RD21pGhZ2rltb/+ZrVM1awdZwjx7hE5XfuYgHWk9uvV5HLZN3SloevCAp3Bw==}
 
   '@types/tough-cookie@4.0.5':
     resolution: {integrity: sha512-/Ad8+nIOV7Rl++6f1BdKxFSMgmoqEoYbHRpPcx3JEfv8VRsQe9Z4mCXeJBzxs7mbHY/XOZZuXlRNfhpVPbs6ZA==}
@@ -4742,6 +4760,10 @@ snapshots:
     dependencies:
       '@babel/types': 7.29.0
 
+  '@types/codemirror@5.60.17':
+    dependencies:
+      '@types/tern': 0.23.9
+
   '@types/d3-array@3.2.2': {}
 
   '@types/d3-axis@3.0.6':
@@ -4910,6 +4932,10 @@ snapshots:
   '@types/source-list-map@0.1.6': {}
 
   '@types/stack-utils@2.0.3': {}
+
+  '@types/tern@0.23.9':
+    dependencies:
+      '@types/estree': 1.0.8
 
   '@types/tough-cookie@4.0.5': {}
 
