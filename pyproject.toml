@@ -26,6 +26,9 @@ artifacts = ["dist/labextension"]
 "dist/labextension" = "share/jupyter/labextensions/jsoniq-jupyterlab-extension"
 "dist/labextension/install.json" = "share/jupyter/labextensions/jsoniq-jupyterlab-extension/install.json"
 
+[tool.hatch.build.targets.wheel]
+packages = ["jsoniq_jupyterlab_extension"]
+
 [tool.hatch.build.targets.sdist]
 exclude = [
     ".github",
