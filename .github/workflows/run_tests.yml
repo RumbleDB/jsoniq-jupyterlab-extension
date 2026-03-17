@@ -44,7 +44,7 @@ jobs:
         run: pnpm run antlr4
 
       - name: Build
-        run: pnpm run build:prod
+        run: uv run pnpm run build:prod   # Because we need to use jupyter, which is a Python package
 
       - name: Run Jest tests
         run: pnpm run test
