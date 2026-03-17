@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "jsoniq-jupyterlab"
-dynamic = ["version", "description", "authors", "urls", "keywords"]
+dynamic = ["version", "description", "authors", "keywords"]
 readme = "README.md"
 license = "Apache-2.0"
 requires-python = ">=3.14"
@@ -13,11 +13,16 @@ dependencies = [
     "jupyterlab>=4.0.0,<5",
 ]
 
+[project.urls]
+Homepage = "https://github.com/CaiJimmy/jsoniq-jupyterlab"
+Repository = "https://github.com/CaiJimmy/jsoniq-jupyterlab.git"
+Issues = "https://github.com/CaiJimmy/jsoniq-jupyterlab/issues"
+
 [tool.hatch.version]
 source = "nodejs"
 
 [tool.hatch.metadata.hooks.nodejs]
-fields = ["description", "authors", "urls", "keywords"]
+fields = ["description", "authors", "keywords"]
 
 [tool.hatch.build]
 artifacts = ["dist/labextension"]
