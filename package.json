@@ -2,18 +2,20 @@
     "name": "jsoniq-jupyterlab-extension",
     "version": "1.0.2",
     "description": "JupyterLab extension to support JSONiq magic within python cells. This extension is required to get the JSONiq LSP functionality.",
-    "main": "dist/plugin.js",
+    "packageManager": "pnpm@10.32.1",
+    "main": "dist/lib/plugin.js",
     "scripts": {
         "build:lib": "tsc --sourceMap",
         "build:lib:prod": "tsc",
-        "build:labextension": "uv run jupyter labextension build .",
-        "build:labextension:dev": "uv run jupyter labextension build --development True .",
-        "build": "run-s build:lib build:labextension:dev",
-        "build:prod": "run-s build:lib:prod build:labextension",
+        "build:labextension": "jupyter labextension build .",
+        "build:labextension:dev": "jupyter labextension build --development True .",
+        "build": "run-s build:lib copy:assets build:labextension:dev",
+        "build:prod": "run-s build:lib:prod copy:assets build:labextension",
+        "copy:assets": "shx mkdir -p dist/images && shx cp images/* dist/images/",
         "watch": "run-p watch:src watch:labextension",
         "watch:src": "tsc -w --sourceMap",
-        "watch:labextension": "uv run jupyter labextension watch .",
-        "link": "uv run jupyter labextension link .",
+        "watch:labextension": "jupyter labextension watch .",
+        "link": "jupyter labextension link .",
         "antlr4": "antlr-ng -Dlanguage=TypeScript ./src/grammar/jsoniq.g4",
         "test": "jest"
     },
@@ -53,15 +55,17 @@
         "@types/jest": "^30.0.0",
         "jest": "^30.3.0",
         "npm-run-all2": "^8.0.4",
+        "shx": "^0.4.0",
         "ts-jest": "^29.4.6",
         "ts-loader": "^9.5.4",
         "typescript": "^5.9.3"
     },
     "files": [
-        "/dist"
+        "dist/lib/",
+        "dist/labextension/"
     ],
     "jupyterlab": {
         "extension": true,
-        "outputDir": "./labextension"
+        "outputDir": "dist/labextension"
     }
 }

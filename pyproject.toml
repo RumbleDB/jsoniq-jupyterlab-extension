@@ -1,9 +1,50 @@
+#:tombi schema.strict = false
+[build-system]
+requires = ["hatchling>=1.5.0", "hatch-jupyter-builder>=0.5.0", "hatch-nodejs-version", "jupyterlab>=4.0.0,<5", "setuptools"]
+build-backend = "hatchling.build"
+
 [project]
 name = "jsoniq-jupyterlab-extension"
-version = "0.1.0"
-description = "Add your description here"
+dynamic = ["version", "description", "authors", "urls", "keywords"]
 readme = "README.md"
+license = "Apache-2.0"
 requires-python = ">=3.14"
 dependencies = [
-    "jupyter>=1.1.1",
+    "jupyterlab>=4.0.0,<5",
 ]
+
+[tool.hatch.version]
+source = "nodejs"
+
+[tool.hatch.metadata.hooks.nodejs]
+fields = ["description", "authors", "urls", "keywords"]
+
+[tool.hatch.build]
+artifacts = ["dist/labextension"]
+
+[tool.hatch.build.targets.wheel.shared-data]
+"dist/labextension" = "share/jupyter/labextensions/jsoniq-jupyterlab-extension"
+"dist/labextension/install.json" = "share/jupyter/labextensions/jsoniq-jupyterlab-extension/install.json"
+
+[tool.hatch.build.targets.sdist]
+exclude = [
+    ".github",
+]
+
+[tool.hatch.build.hooks.jupyter-builder]
+dependencies = ["hatch-jupyter-builder>=0.5.0"]
+build-function = "hatch_jupyter_builder.npm_builder"
+ensured-targets = [
+    "dist/labextension/package.json",
+]
+skip-if-exists = ["dist/labextension/package.json"]
+
+[tool.hatch.build.hooks.jupyter-builder.build-kwargs]
+npm = ["pnpm"]
+build_cmd = "build:prod"
+
+[tool.jupyter-releaser.options]
+version_cmd = "hatch version"
+
+[tool.jupyter-releaser.hooks]
+# hatch-jupyter-builder handles the build

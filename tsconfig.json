@@ -9,8 +9,8 @@
         "moduleResolution": "NodeNext",
         "sourceMap": true,
         "strict": true,
-        "outDir": "dist",
-        "rootDir": "./src",
+        "outDir": "dist/lib",
+        "rootDir": "src",
         "incremental": true,
         "esModuleInterop": true,
         "skipLibCheck": true
