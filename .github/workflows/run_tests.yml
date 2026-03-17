@@ -24,6 +24,9 @@ jobs:
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
 
+      - name: Install dependencies
+        run: pnpm install
+
       - name: Install uv
         uses: astral-sh/setup-uv@v7
         with:
@@ -34,9 +37,6 @@ jobs:
 
       - name: Install Python dependencies
         run: uv sync --locked --all-extras --dev
-
-      - name: Install dependencies
-        run: pnpm install
 
       - name: Build antlr4 grammar
         run: pnpm run antlr4
