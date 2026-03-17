@@ -1,5 +1,5 @@
 {
-    "name": "jsoniq-jupyterlab-extension",
+    "name": "jsoniq-jupyterlab",
     "version": "1.0.2",
     "description": "JupyterLab extension to support JSONiq magic within python cells. This extension is required to get the JSONiq LSP functionality.",
     "packageManager": "pnpm@10.32.1",
@@ -21,7 +21,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/CaiJimmy/jsoniq-jupyterlab-extension.git"
+        "url": "git+https://github.com/CaiJimmy/jsoniq-jupyterlab.git"
     },
     "keywords": [
         "jsoniq"
@@ -29,9 +29,9 @@
     "author": "JSONiq Development Team",
     "license": "Apache-2.0",
     "bugs": {
-        "url": "https://github.com/CaiJimmy/jsoniq-jupyterlab-extension/issues"
+        "url": "https://github.com/CaiJimmy/jsoniq-jupyterlab/issues"
     },
-    "homepage": "https://github.com/CaiJimmy/jsoniq-jupyterlab-extension#readme",
+    "homepage": "https://github.com/CaiJimmy/jsoniq-jupyterlab#readme",
     "dependencies": {
         "@codemirror/lang-python": "^6.2.1",
         "@codemirror/lang-sql": "^6.10.0",

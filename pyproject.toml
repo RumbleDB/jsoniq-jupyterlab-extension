@@ -4,7 +4,7 @@ requires = ["hatchling>=1.5.0", "hatch-jupyter-builder>=0.5.0", "hatch-nodejs-ve
 build-backend = "hatchling.build"
 
 [project]
-name = "jsoniq-jupyterlab-extension"
+name = "jsoniq-jupyterlab"
 dynamic = ["version", "description", "authors", "urls", "keywords"]
 readme = "README.md"
 license = "Apache-2.0"
@@ -23,11 +23,11 @@ fields = ["description", "authors", "urls", "keywords"]
 artifacts = ["dist/labextension"]
 
 [tool.hatch.build.targets.wheel.shared-data]
-"dist/labextension" = "share/jupyter/labextensions/jsoniq-jupyterlab-extension"
-"dist/labextension/install.json" = "share/jupyter/labextensions/jsoniq-jupyterlab-extension/install.json"
+"dist/labextension" = "share/jupyter/labextensions/jsoniq-jupyterlab"
+"dist/labextension/install.json" = "share/jupyter/labextensions/jsoniq-jupyterlab/install.json"
 
 [tool.hatch.build.targets.wheel]
-packages = ["jsoniq_jupyterlab_extension"]
+packages = ["jsoniq_jupyterlab"]
 
 [tool.hatch.build.targets.sdist]
 exclude = [

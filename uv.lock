@@ -437,7 +437,7 @@ wheels = [
 ]
 
 [[package]]
-name = "jsoniq-jupyterlab-extension"
+name = "jsoniq-jupyterlab"
 source = { editable = "." }
 dependencies = [
     { name = "jupyterlab" },

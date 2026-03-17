@@ -1,6 +1,6 @@
-# jsoniq-jupyterlab-extension
+# jsoniq-jupyterlab
 
-`jsoniq-jupyterlab-extension` is a JupyterLab extension that adds support for Python magics to interact with the JSONiq language server. This extension allows users to enjoy language features of jsoniq cells within Python notebooks or `.jq` files. With the extension, syntax highlighting with CodeMirror is also enabled for jsoniq cells using the `%%jsoniq` magic or `.jq` files.
+`jsoniq-jupyterlab` is a JupyterLab extension that adds support for Python magics to interact with the JSONiq language server. This extension allows users to enjoy language features of jsoniq cells within Python notebooks or `.jq` files. With the extension, syntax highlighting with CodeMirror is also enabled for jsoniq cells using the `%%jsoniq` magic or `.jq` files.
 
 ## Features
 
@@ -9,7 +9,7 @@
 
 ## Installation
 
-To install the `jsoniq-jupyterlab-extension`, you can use `npm` or `yarn`. Make sure you have JupyterLab and the JupyterLSP extension installed before proceeding.
+To install the `jsoniq-jupyterlab`, you can use `npm` or `yarn`. Make sure you have JupyterLab and the JupyterLSP extension installed before proceeding.
 
 To install JupyterLSP, run:
 
@@ -21,16 +21,16 @@ To install the JSONiq Jupyter Extension, run:
 
 ```sh
 # Using npm
-npm install jsoniq-jupyterlab-extension
+npm install jsoniq-jupyterlab
 
 # Using yarn
-yarn add jsoniq-jupyterlab-extension
+yarn add jsoniq-jupyterlab
 ```
 
 After installing the package, you may need to enable the extension in JupyterLab:
 
 ```sh
-jupyter labextension enable jsoniq-jupyterlab-extension
+jupyter labextension enable jsoniq-jupyterlab
 ```
 
 ## Usage
@@ -50,13 +50,13 @@ This cell should become highlighted and language features should be enabled.
 
 ## Development
 
-To contribute to the development of `jsoniq-jupyterlab-extension`, follow these steps:
+To contribute to the development of `jsoniq-jupyterlab`, follow these steps:
 
 1. Clone the repository:
 
    ```sh
-   git clone https://github.com/davidbuzatu-marian/jsoniq-jupyterlab-extension.git
-   cd jsoniq-jupyterlab-extension
+   git clone https://github.com/davidbuzatu-marian/jsoniq-jupyterlab.git
+   cd jsoniq-jupyterlab
    ```
 
 2. Install dependencies:
