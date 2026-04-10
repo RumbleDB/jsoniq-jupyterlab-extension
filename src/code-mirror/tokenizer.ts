@@ -1,18 +1,10 @@
 import { CharStream, CommonTokenStream, CommonToken } from "antlr4ng";
-import { tags, Tag } from "@lezer/highlight";
 import { StreamLanguage, StringStream } from "@codemirror/language";
 import { jsoniqLexer } from "../grammar/jsoniqLexer.js";
 import {
-    TAG_TO_STYLE_NAME,
-    KEYWORD_TOKENS,
-    NUMBER_TOKENS,
-    SQUARE_BRACKET_TOKENS,
-    BRACE_TOKENS,
-    PAREN_TOKENS,
-    OPERATOR_TOKENS,
-    SEPARATOR_TOKENS,
-    NAMESPACE_TOKENS,
+    TOKEN_TYPE_TO_TAG
 } from "./tokenSets.js";
+import { Tag, tags } from "@lezer/highlight";
 
 /**
  * Token type ID from the JSONiq ANTLR lexer.
@@ -73,29 +65,6 @@ class Tokenizer {
     public getTokens(): Token[] {
         return this.tokens;
     }
-
-    public findCurrentToken(streamPos: number): Token | undefined {
-        /// Because the array of tokens is ordered by their position in the line, we can use a binary search to find the current token efficiently.
-        /// We are looking for a token such that token.startIndex <= streamPos <= token.stopIndex
-
-        let left = 0;
-        let right = this.tokens.length - 1;
-
-        while (left <= right) {
-            const mid = Math.floor((left + right) / 2);
-            const token = this.tokens[mid];
-
-            if (streamPos < token.startIndex) {
-                right = mid - 1;
-            } else if (streamPos > token.stopIndex) {
-                left = mid + 1;
-            } else {
-                return token; // Found the token that contains the stream position
-            }
-        }
-
-        return undefined; // No token found at the stream position
-    }
 }
 
 export class TokenToCodeMirrorStyleConverter {
@@ -109,10 +78,6 @@ export class TokenToCodeMirrorStyleConverter {
         this.state = state;
     }
 
-    private getStyleNameByTag(tag: Tag): string {
-        return TAG_TO_STYLE_NAME.get(tag) || "";
-    }
-
     public convertTokenToCodeMirrorStyle(): string | null {
         if (
             this.state.nextTokenStyle &&
@@ -121,72 +86,24 @@ export class TokenToCodeMirrorStyleConverter {
         ) {
             const style = this.state.nextTokenStyle;
             this.state.nextTokenStyle = null; // clear for next call
-            return style;
+            return style.toString();
         }
 
         return this.convertCurrentTokenToCodeMirrorStyle();
     }
 
-    private convertCurrentTokenToCodeMirrorStyle() {
+    private convertCurrentTokenToCodeMirrorStyle(): string | null {
         if (
             this.currToken &&
             this.currToken.type !== jsoniqLexer.EOF &&
             this.stream.match(this.currToken.text)
         ) {
-            if (KEYWORD_TOKENS.has(this.currToken.type)) {
-                return this.getStyleNameByTag(tags.keyword);
-            }
-
-            if (this.currToken.type === jsoniqLexer.XQComment) {
-                return this.getStyleNameByTag(tags.comment);
-            }
-
-            if (this.currToken.type === jsoniqLexer.STRING) {
-                return this.getStyleNameByTag(tags.string);
-            }
-
-            if (NUMBER_TOKENS.has(this.currToken.type)) {
-                return this.getStyleNameByTag(tags.number);
-            }
-
-            if (SQUARE_BRACKET_TOKENS.has(this.currToken.type)) {
-                return this.getStyleNameByTag(tags.squareBracket);
-            }
-
-            if (BRACE_TOKENS.has(this.currToken.type)) {
-                return this.getStyleNameByTag(tags.brace);
-            }
-
-            if (PAREN_TOKENS.has(this.currToken.type)) {
-                return this.getStyleNameByTag(tags.paren);
-            }
-
-            if (OPERATOR_TOKENS.has(this.currToken.type)) {
-                return this.getStyleNameByTag(tags.operator);
-            }
-
-            if (SEPARATOR_TOKENS.has(this.currToken.type)) {
-                return this.getStyleNameByTag(tags.separator);
-            }
-
             if (this.currToken.type === jsoniqLexer.Kdot) {
-                this.state.nextTokenStyle = this.getStyleNameByTag(tags.propertyName);
-                return this.getStyleNameByTag(tags.derefOperator);
+                this.state.nextTokenStyle = tags.propertyName.toString();
             }
 
-            if (NAMESPACE_TOKENS.has(this.currToken.type)) {
-                return this.getStyleNameByTag(tags.namespace);
-            }
-
-            if (this.currToken.type === jsoniqLexer.Kmodule) {
-                return this.getStyleNameByTag(tags.moduleKeyword);
-            }
-
-            if (this.currToken.type === jsoniqLexer.Kannotation) {
-                return this.getStyleNameByTag(tags.annotation);
-            }
-
-            return this.getStyleNameByTag(tags.variableName);
+            const style = TOKEN_TYPE_TO_TAG.get(this.currToken.type);
+            return style?.toString() || tags.variableName.toString();
         } else {
             this.stream.next();
             return null;
@@ -231,7 +148,6 @@ export const jsoniqLanguageDefinition = StreamLanguage.define({
             state
         );
         const style = tokenConverter.convertTokenToCodeMirrorStyle();
-
 
         /// The current token has been fully consumed, move to the next token for the next call
         if (
