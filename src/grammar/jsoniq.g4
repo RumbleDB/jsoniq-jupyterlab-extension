@@ -622,6 +622,124 @@ keyWords                : Kjsoniq
 
 ///////////////////////// literals
 
+Ksemicolon             : ';';
+
+Kmodule                : 'module';
+
+Kequal                 : '=';
+
+Kdollar                : '$';
+
+Kassign                : ':=';
+
+Klbrace                : '{';
+
+Krbrace                : '}';
+
+Klparen                : '(';
+
+Krparen                : ')';
+
+Kasterisk              : '*';
+
+Kpipe                  : '|';
+
+Kannotation            : '%';
+
+Kcomma                 : ',';
+
+Kbase_uri              : 'base-uri';
+
+Kordering              : 'ordering';
+
+Kordered               : 'ordered';
+
+Kdecimal_format        : 'decimal-format';
+
+Kcolon                 : ':';
+
+Kdecimal_separator     : 'decimal-separator';
+
+Kgrouping_separator    : 'grouping-separator';
+
+Kinfinity              : 'infinity';
+
+Kminus_sign            : 'minus-sign';
+
+Knan                   : 'NaN';
+
+Kpercent               : 'percent';
+
+Kper_mille             : 'per-mille';
+
+Kzero_digit            : 'zero-digit';
+
+Kdigit                 : 'digit';
+
+Kpattern_separator     : 'pattern-separator';
+
+Kexternal              : 'external';
+
+Kfunction              : 'function';
+
+Kjsound                : 'jsound';
+
+Kcompact               : 'compact';
+
+Kverbose               : 'verbose';
+
+Keq                    : 'eq';
+
+Kne                    : 'ne';
+
+Klt                    : 'lt';
+
+Kle                    : 'le';
+
+Kgt                    : 'gt';
+
+Kge                    : 'ge';
+
+Knot_equal             : '!=';
+
+Kless                  : '<';
+
+Kless_or_equal         : '<=';
+
+Kgreater               : '>';
+
+Kgreater_or_equal      : '>=';
+
+Kconcat                : '||';
+
+Kplus                  : '+';
+
+Kminus                 : '-';
+
+Kdiv                   : 'div';
+
+Kidiv                  : 'idiv';
+
+Kmod                   : 'mod';
+
+Kbang                  : '!';
+
+Klbracket              : '[';
+
+Krbracket              : ']';
+
+Kdot                   : '.';
+
+Kcontext_item          : '$$';
+
+Khash                  : '#';
+
+Kdotdot                : '..';
+
+Kobject_start          : '{|';
+
+Kobject_end            : '|}';
+
 Kfor                    : 'for';
 
 Klet                    : 'let';
