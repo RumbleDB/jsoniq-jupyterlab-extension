@@ -4,7 +4,7 @@ import { jsoniqLexer } from "../grammar/jsoniqLexer.js";
 import {
     TOKEN_TYPE_TO_TAG
 } from "./tokenSets.js";
-import { Tag, tags } from "@lezer/highlight";
+import { tags } from "@lezer/highlight";
 
 /**
  * Token type ID from the JSONiq ANTLR lexer.
