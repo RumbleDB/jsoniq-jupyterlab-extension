@@ -83,7 +83,7 @@ jobs:
 
         environment:
             name: testpypi
-            url: https://test.pypi.org/p/jsoniq-jupyterlab
+            url: https://test.pypi.org/p/jsoniq-jupyterlab-extension
 
         permissions:
             id-token: write # IMPORTANT: mandatory for trusted publishing
