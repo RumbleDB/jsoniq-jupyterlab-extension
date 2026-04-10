@@ -99,7 +99,7 @@ export class TokenToCodeMirrorStyleConverter {
         ) {
             let valueClass;
             switch (this.currToken.type) {
-                case jsoniqLexer.T__1:
+                case jsoniqLexer.Kdollar:
                     // $ symbol
                     valueClass = this.getStyleNameByTag(tags.variableName);
                     break;
@@ -179,7 +179,7 @@ export class TokenToCodeMirrorStyleConverter {
                 case jsoniqLexer.Kand:
                 case jsoniqLexer.Kor:
                 case jsoniqLexer.Knot:
-                case jsoniqLexer.Kcontext_dollars:
+                case jsoniqLexer.Kcontext_item:
                 case jsoniqLexer.Ktrue:
                 case jsoniqLexer.Kfalse:
                 case jsoniqLexer.NullLiteral:
@@ -198,36 +198,36 @@ export class TokenToCodeMirrorStyleConverter {
                 case jsoniqLexer.DecimalLiteral:
                     valueClass = this.getStyleNameByTag(tags.number);
                     break;
-                case jsoniqLexer.T__33:
-                case jsoniqLexer.T__34:
+                case jsoniqLexer.Klbracket:
+                case jsoniqLexer.Krbracket:
                     // [] brackets
                     valueClass = this.getStyleNameByTag(tags.squareBracket);
                     break;
-                case jsoniqLexer.T__2:
-                case jsoniqLexer.T__3:
+                case jsoniqLexer.Klbrace:
+                case jsoniqLexer.Krbrace:
                     // {} braces
                     valueClass = this.getStyleNameByTag(tags.brace);
                     break;
-                case jsoniqLexer.T__4:
-                case jsoniqLexer.T__5:
+                case jsoniqLexer.Klparen:
+                case jsoniqLexer.Krparen:
                     // () parenthesis
                     valueClass = this.getStyleNameByTag(tags.paren);
                     break;
-                case jsoniqLexer.T__27:
-                case jsoniqLexer.T__28:
-                case jsoniqLexer.T__6:
-                case jsoniqLexer.T__29:
-                case jsoniqLexer.T__31:
+                case jsoniqLexer.Kplus:
+                case jsoniqLexer.Kminus:
+                case jsoniqLexer.Kasterisk:
+                case jsoniqLexer.Kdiv:
+                case jsoniqLexer.Kmod:
                 case jsoniqLexer.Kassign:
                     // +, -, *, div, mod, :=
                     valueClass = this.getStyleNameByTag(tags.operator);
                     break;
-                case jsoniqLexer.T__9:
-                case jsoniqLexer.T__0:
+                case jsoniqLexer.Kcomma:
+                case jsoniqLexer.Ksemicolon:
                     // ",",  ";"
                     valueClass = this.getStyleNameByTag(tags.separator);
                     break;
-                case jsoniqLexer.T__35:
+                case jsoniqLexer.Kdot:
                     // "."
                     valueClass = this.getStyleNameByTag(tags.derefOperator);
                     this.state.tokenValueClassFromPreviousTokenContext =
@@ -246,7 +246,7 @@ export class TokenToCodeMirrorStyleConverter {
                 case jsoniqLexer.Kmodule:
                     valueClass = this.getStyleNameByTag(tags.moduleKeyword);
                     break;
-                case jsoniqLexer.T__8:
+                case jsoniqLexer.Kannotation:
                     // "%"
                     valueClass = this.getStyleNameByTag(tags.annotation);
                     break;
