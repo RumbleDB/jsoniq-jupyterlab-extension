@@ -8,7 +8,7 @@ name = "jsoniq-jupyterlab"
 dynamic = ["version", "description", "authors", "keywords"]
 readme = "README.md"
 license = "Apache-2.0"
-requires-python = ">=3.14"
+requires-python = ">=3.11"
 dependencies = [
     "jupyterlab>=4.0.0,<5",
 ]
