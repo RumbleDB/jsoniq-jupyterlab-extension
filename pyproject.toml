@@ -28,8 +28,8 @@ fields = ["description", "authors", "keywords"]
 artifacts = ["dist/labextension"]
 
 [tool.hatch.build.targets.wheel.shared-data]
-"dist/labextension" = "share/jupyter/labextensions/jsoniq-jupyterlab"
-"dist/labextension/install.json" = "share/jupyter/labextensions/jsoniq-jupyterlab/install.json"
+"dist/labextension" = "share/jupyter/labextensions/jsoniq-jupyterlab-extension"
+"dist/labextension/install.json" = "share/jupyter/labextensions/jsoniq-jupyterlab-extension/install.json"
 
 [tool.hatch.build.targets.wheel]
 packages = ["jsoniq_jupyterlab"]
