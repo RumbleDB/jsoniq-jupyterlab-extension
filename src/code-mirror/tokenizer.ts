@@ -231,12 +231,4 @@ export const jsoniqLanguageDefinition = StreamLanguage.define({
 
         return style;
     },
-    copyState(state) {
-        return {
-            cachedLineText: state.cachedLineText,
-            cachedTokens: state.cachedTokens,
-            currentTokenIndex: state.currentTokenIndex,
-            nextTokenStyle: state.nextTokenStyle,
-        };
-    },
 });
