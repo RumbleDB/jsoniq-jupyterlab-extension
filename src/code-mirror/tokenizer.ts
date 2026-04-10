@@ -40,8 +40,7 @@ interface TokenizerState {
 
     /// For some tokens (e.g. dot), we want to set the style of the following token based on the current token, this is to keep track of that context.
     /// For example, after a dot operator, the following token is likely a property name, so we want to style it as such.
-    tokenValueClassFromPreviousTokenContext: string;
-    hasTokenValueClassFromPreviousToken: boolean;
+    nextTokenStyle: string | null;
 }
 
 class Tokenizer {
@@ -97,16 +96,16 @@ export class TokenToCodeMirrorStyleConverter {
 
     public convertTokenToCodeMirrorStyle(): string | null {
         if (
-            this.state.hasTokenValueClassFromPreviousToken &&
+            this.state.nextTokenStyle &&
             this.currToken &&
             this.stream.match(this.currToken.text)
         ) {
-            // Some previous context set the current token's class
-            this.state.hasTokenValueClassFromPreviousToken = false;
-            return this.state.tokenValueClassFromPreviousTokenContext;
-        } else {
-            return this.convertCurrentTokenToCodeMirrorStyle();
+            const style = this.state.nextTokenStyle;
+            this.state.nextTokenStyle = null; // clear for next call
+            return style;
         }
+
+        return this.convertCurrentTokenToCodeMirrorStyle();
     }
 
     private convertCurrentTokenToCodeMirrorStyle() {
@@ -152,9 +151,7 @@ export class TokenToCodeMirrorStyleConverter {
             }
 
             if (this.currToken.type === jsoniqLexer.Kdot) {
-                this.state.tokenValueClassFromPreviousTokenContext =
-                    this.getStyleNameByTag(tags.propertyName);
-                this.state.hasTokenValueClassFromPreviousToken = true;
+                this.state.nextTokenStyle = this.getStyleNameByTag(tags.propertyName);
                 return this.getStyleNameByTag(tags.derefOperator);
             }
 
@@ -181,11 +178,10 @@ export class TokenToCodeMirrorStyleConverter {
 export const jsoniqLanguageDefinition = StreamLanguage.define({
     startState: (_) => {
         return {
-            tokenValueClassFromPreviousTokenContext: "",
-            hasTokenValueClassFromPreviousToken: false,
             cachedLineText: "",
             cachedTokens: [],
             currentTokenIndex: 0,
+            nextTokenStyle: null,
         };
     },
     token: (stream, state: TokenizerState) => {
@@ -237,13 +233,10 @@ export const jsoniqLanguageDefinition = StreamLanguage.define({
     },
     copyState(state) {
         return {
-            tokenValueClassFromPreviousTokenContext:
-                state.tokenValueClassFromPreviousTokenContext,
-            hasTokenValueClassFromPreviousToken:
-                state.hasTokenValueClassFromPreviousToken,
             cachedLineText: state.cachedLineText,
             cachedTokens: state.cachedTokens,
             currentTokenIndex: state.currentTokenIndex,
+            nextTokenStyle: state.nextTokenStyle,
         };
     },
 });
