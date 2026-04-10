@@ -28,7 +28,7 @@ interface Token {
     stopIndex: number;
 }
 
-interface TokenizerState {
+export interface TokenizerState {
     /// Cache the current line and its tokens
     /// Because CodeMirror may call the tokenizer multiple times for the same line, 
     ///     and we want to avoid re-tokenizing.

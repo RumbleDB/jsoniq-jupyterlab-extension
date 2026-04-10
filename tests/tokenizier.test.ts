@@ -2,6 +2,7 @@ import { describe, test, expect } from "@jest/globals";
 import { TokenToCodeMirrorStyleConverter } from "../src/code-mirror/tokenizer";
 import { jsoniqLexer } from "../src/grammar/jsoniqLexer";
 import { StringStream } from "@codemirror/language";
+import type { TokenizerState } from "../src/code-mirror/tokenizer";
 
 function createCurrentToken(
     text: string,
@@ -18,9 +19,12 @@ function createCurrentToken(
     };
 }
 
-function createState(nextTokenStyle: string | null) {
+function createState(nextTokenStyle: string | null): TokenizerState {
     return {
         nextTokenStyle,
+        cachedLineText: "",
+        cachedTokens: [],
+        currentTokenIndex: 0,
     };
 }
 
