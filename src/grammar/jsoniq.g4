@@ -1,11 +1,6 @@
 /// This file should be synced with https://github.com/RumbleDB/rumble/blob/master/src/main/java/org/rumbledb/parser/jsoniq/Jsoniq.g4
 grammar jsoniq;
 
-@header {
-// Java header
-package org.rumbledb.parser.jsoniq;
-}
-
 moduleAndThisIsIt       : module EOF;
 
 module                  : (Kjsoniq Kversion vers=stringLiteral ';')?
