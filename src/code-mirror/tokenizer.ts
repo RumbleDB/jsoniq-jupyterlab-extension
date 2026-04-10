@@ -2,9 +2,19 @@ import { CharStream, CommonTokenStream, CommonToken } from "antlr4ng";
 import { tags, Tag } from "@lezer/highlight";
 import { StreamLanguage, StringStream } from "@codemirror/language";
 import { jsoniqLexer } from "../grammar/jsoniqLexer.js";
+import {
+    TAG_TO_STYLE_NAME,
+    KEYWORD_TOKENS,
+    NUMBER_TOKENS,
+    SQUARE_BRACKET_TOKENS,
+    BRACE_TOKENS,
+    PAREN_TOKENS,
+    OPERATOR_TOKENS,
+    SEPARATOR_TOKENS,
+    NAMESPACE_TOKENS,
+} from "./tokenSets.js";
 
 interface Token {
-    tokenName: string;
     text: string;
     type: number;
     startIndex: number;
@@ -14,27 +24,30 @@ interface Token {
 interface TokenizerState {
     tokenValueClassFromPreviousTokenContext: string;
     hasTokenValueClassFromPreviousToken: boolean;
+    cachedLineText?: string;
+    cachedTokens?: Token[];
+    currentTokenIndex?: number;
 }
 
 class Tokenizer {
-    private tokens;
+    private tokens: Token[];
 
     constructor(text: string) {
         this.tokens = this.getTokensForText(text);
     }
 
-    private getTokensForText(text: string) {
-        var chars = CharStream.fromString(text);
-        var lexer = new jsoniqLexer(chars);
-        var tokensStream = new CommonTokenStream(lexer);
+    private getTokensForText(text: string): Token[] {
+        const chars = CharStream.fromString(text);
+        const lexer = new jsoniqLexer(chars);
+        const tokensStream = new CommonTokenStream(lexer);
         tokensStream.fill();
-        return this.convertCommonTokensToTokens((tokensStream as any).tokens);
+        const rawTokens = (tokensStream as unknown as { tokens: CommonToken[] }).tokens;
+        return this.convertCommonTokensToTokens(rawTokens);
     }
 
     private convertCommonTokensToTokens(tokens: CommonToken[]): Token[] {
         return tokens.map((token) => {
             return {
-                tokenName: this.getTokenNameByTokenValue(token.type),
                 text: token.text || "",
                 type: token.type,
                 startIndex: token.start,
@@ -43,13 +56,8 @@ class Tokenizer {
         });
     }
 
-    private getTokenNameByTokenValue(tokenValue: number): string {
-        for (let tokenName in jsoniqLexer) {
-            if (((jsoniqLexer as any)[tokenName] as number) === tokenValue) {
-                return tokenName;
-            }
-        }
-        return "";
+    public getTokens(): Token[] {
+        return this.tokens;
     }
 
     public findCurrentToken(streamPos: number): Token | undefined {
@@ -69,15 +77,10 @@ export class TokenToCodeMirrorStyleConverter {
     }
 
     private getStyleNameByTag(tag: Tag): string {
-        for (let t in tags) {
-            if ((tags as any)[t] === tag) {
-                return t;
-            }
-        }
-        return "";
+        return TAG_TO_STYLE_NAME.get(tag) || "";
     }
 
-    public convertTokenToCodeMirrorStyle() {
+    public convertTokenToCodeMirrorStyle(): string | null {
         if (
             this.state.hasTokenValueClassFromPreviousToken &&
             this.currToken &&
@@ -97,164 +100,62 @@ export class TokenToCodeMirrorStyleConverter {
             this.currToken.type !== jsoniqLexer.EOF &&
             this.stream.match(this.currToken.text)
         ) {
-            let valueClass;
-            switch (this.currToken.type) {
-                case jsoniqLexer.Kdollar:
-                    // $ symbol
-                    valueClass = this.getStyleNameByTag(tags.variableName);
-                    break;
-                case jsoniqLexer.NCName:
-                    valueClass = this.getStyleNameByTag(tags.variableName);
-                    break;
-                case jsoniqLexer.Kversion:
-                case jsoniqLexer.Kcontext:
-                case jsoniqLexer.Ktype:
-                case jsoniqLexer.Kfor:
-                case jsoniqLexer.Ktypeswitch:
-                case jsoniqLexer.Kswitch:
-                case jsoniqLexer.Kif:
-                case jsoniqLexer.Kthen:
-                case jsoniqLexer.Kelse:
-                case jsoniqLexer.Ktry:
-                case jsoniqLexer.Kcatch:
-                case jsoniqLexer.Kwhere:
-                case jsoniqLexer.Kgroup:
-                case jsoniqLexer.Kby:
-                case jsoniqLexer.Korder:
-                case jsoniqLexer.Kas:
-                case jsoniqLexer.Kat:
-                case jsoniqLexer.Kin:
-                case jsoniqLexer.Kdeclare:
-                case jsoniqLexer.Kimport:
-                case jsoniqLexer.Kreplace:
-                case jsoniqLexer.Kvalue:
-                case jsoniqLexer.Kof:
-                case jsoniqLexer.Krename:
-                case jsoniqLexer.Kinsert:
-                case jsoniqLexer.Kdelete:
-                case jsoniqLexer.Kcopy:
-                case jsoniqLexer.Kappend:
-                case jsoniqLexer.Kwith:
-                case jsoniqLexer.Kmodify:
-                case jsoniqLexer.Kinto:
-                case jsoniqLexer.Kbreak:
-                case jsoniqLexer.Kloop:
-                case jsoniqLexer.Kcontinue:
-                case jsoniqLexer.Kexit:
-                case jsoniqLexer.Kreturning:
-                case jsoniqLexer.Kwhile:
-                case jsoniqLexer.Kannotate:
-                case jsoniqLexer.Kvalidate:
-                case jsoniqLexer.Kcastable:
-                case jsoniqLexer.Kcast:
-                case jsoniqLexer.Ktreat:
-                case jsoniqLexer.Kis:
-                case jsoniqLexer.Kstatically:
-                case jsoniqLexer.Kinstance:
-                case jsoniqLexer.Kto:
-                case jsoniqLexer.Kcollation:
-                case jsoniqLexer.Ksatisfies:
-                case jsoniqLexer.Kstable:
-                case jsoniqLexer.Kempty:
-                case jsoniqLexer.Kallowing:
-                case jsoniqLexer.Kreturn:
-                case jsoniqLexer.Kleast:
-                case jsoniqLexer.Kgreatest:
-                case jsoniqLexer.Ksome:
-                case jsoniqLexer.Kevery:
-                case jsoniqLexer.Kascending:
-                case jsoniqLexer.Kdescending:
-                case jsoniqLexer.Kordering:
-                case jsoniqLexer.Kordered:
-                case jsoniqLexer.Kcase:
-                case jsoniqLexer.Kcount:
-                case jsoniqLexer.Kdefault:
-                case jsoniqLexer.Kunordered:
-                case jsoniqLexer.Keq:
-                case jsoniqLexer.Kne:
-                case jsoniqLexer.Klt:
-                case jsoniqLexer.Kle:
-                case jsoniqLexer.Kgt:
-                case jsoniqLexer.Kge:
-                case jsoniqLexer.Kand:
-                case jsoniqLexer.Kor:
-                case jsoniqLexer.Knot:
-                case jsoniqLexer.Kcontext_item:
-                case jsoniqLexer.Ktrue:
-                case jsoniqLexer.Kfalse:
-                case jsoniqLexer.NullLiteral:
-                    valueClass = this.getStyleNameByTag(tags.keyword);
-                    break;
-                case jsoniqLexer.XQComment:
-                    valueClass = this.getStyleNameByTag(tags.comment);
-                    break;
-                case jsoniqLexer.STRING:
-                    valueClass = this.getStyleNameByTag(tags.string);
-                    break;
-                case jsoniqLexer.Literal:
-                case jsoniqLexer.NumericLiteral:
-                case jsoniqLexer.DoubleLiteral:
-                case jsoniqLexer.IntegerLiteral:
-                case jsoniqLexer.DecimalLiteral:
-                    valueClass = this.getStyleNameByTag(tags.number);
-                    break;
-                case jsoniqLexer.Klbracket:
-                case jsoniqLexer.Krbracket:
-                    // [] brackets
-                    valueClass = this.getStyleNameByTag(tags.squareBracket);
-                    break;
-                case jsoniqLexer.Klbrace:
-                case jsoniqLexer.Krbrace:
-                    // {} braces
-                    valueClass = this.getStyleNameByTag(tags.brace);
-                    break;
-                case jsoniqLexer.Klparen:
-                case jsoniqLexer.Krparen:
-                    // () parenthesis
-                    valueClass = this.getStyleNameByTag(tags.paren);
-                    break;
-                case jsoniqLexer.Kplus:
-                case jsoniqLexer.Kminus:
-                case jsoniqLexer.Kasterisk:
-                case jsoniqLexer.Kdiv:
-                case jsoniqLexer.Kmod:
-                case jsoniqLexer.Kassign:
-                    // +, -, *, div, mod, :=
-                    valueClass = this.getStyleNameByTag(tags.operator);
-                    break;
-                case jsoniqLexer.Kcomma:
-                case jsoniqLexer.Ksemicolon:
-                    // ",",  ";"
-                    valueClass = this.getStyleNameByTag(tags.separator);
-                    break;
-                case jsoniqLexer.Kdot:
-                    // "."
-                    valueClass = this.getStyleNameByTag(tags.derefOperator);
-                    this.state.tokenValueClassFromPreviousTokenContext =
-                        this.getStyleNameByTag(tags.propertyName);
-                    this.state.hasTokenValueClassFromPreviousToken = true;
-                    break;
-                case jsoniqLexer.Kfunction:
-                case jsoniqLexer.Kvariable:
-                case jsoniqLexer.Klet:
-                    valueClass = this.getStyleNameByTag(tags.keyword);
-                    break;
-                case jsoniqLexer.Knamespace:
-                case jsoniqLexer.Kexternal:
-                    valueClass = this.getStyleNameByTag(tags.namespace);
-                    break;
-                case jsoniqLexer.Kmodule:
-                    valueClass = this.getStyleNameByTag(tags.moduleKeyword);
-                    break;
-                case jsoniqLexer.Kannotation:
-                    // "%"
-                    valueClass = this.getStyleNameByTag(tags.annotation);
-                    break;
-                default:
-                    valueClass = this.getStyleNameByTag(tags.variableName);
-                    break;
+            if (KEYWORD_TOKENS.has(this.currToken.type)) {
+                return this.getStyleNameByTag(tags.keyword);
             }
-            return valueClass;
+
+            if (this.currToken.type === jsoniqLexer.XQComment) {
+                return this.getStyleNameByTag(tags.comment);
+            }
+
+            if (this.currToken.type === jsoniqLexer.STRING) {
+                return this.getStyleNameByTag(tags.string);
+            }
+
+            if (NUMBER_TOKENS.has(this.currToken.type)) {
+                return this.getStyleNameByTag(tags.number);
+            }
+
+            if (SQUARE_BRACKET_TOKENS.has(this.currToken.type)) {
+                return this.getStyleNameByTag(tags.squareBracket);
+            }
+
+            if (BRACE_TOKENS.has(this.currToken.type)) {
+                return this.getStyleNameByTag(tags.brace);
+            }
+
+            if (PAREN_TOKENS.has(this.currToken.type)) {
+                return this.getStyleNameByTag(tags.paren);
+            }
+
+            if (OPERATOR_TOKENS.has(this.currToken.type)) {
+                return this.getStyleNameByTag(tags.operator);
+            }
+
+            if (SEPARATOR_TOKENS.has(this.currToken.type)) {
+                return this.getStyleNameByTag(tags.separator);
+            }
+
+            if (this.currToken.type === jsoniqLexer.Kdot) {
+                this.state.tokenValueClassFromPreviousTokenContext =
+                    this.getStyleNameByTag(tags.propertyName);
+                this.state.hasTokenValueClassFromPreviousToken = true;
+                return this.getStyleNameByTag(tags.derefOperator);
+            }
+
+            if (NAMESPACE_TOKENS.has(this.currToken.type)) {
+                return this.getStyleNameByTag(tags.namespace);
+            }
+
+            if (this.currToken.type === jsoniqLexer.Kmodule) {
+                return this.getStyleNameByTag(tags.moduleKeyword);
+            }
+
+            if (this.currToken.type === jsoniqLexer.Kannotation) {
+                return this.getStyleNameByTag(tags.annotation);
+            }
+
+            return this.getStyleNameByTag(tags.variableName);
         } else {
             this.stream.next();
             return null;
@@ -267,16 +168,57 @@ export const jsoniqLanguageDefinition = StreamLanguage.define({
         return {
             tokenValueClassFromPreviousTokenContext: "",
             hasTokenValueClassFromPreviousToken: false,
+            cachedLineText: "",
+            cachedTokens: [],
+            currentTokenIndex: 0,
         };
     },
     token: (stream, state: TokenizerState) => {
-        const tokenizier = new Tokenizer(stream.string);
+        if (typeof state.cachedLineText !== "string") {
+            state.cachedLineText = "";
+        }
+        if (!state.cachedTokens) {
+            state.cachedTokens = [];
+        }
+        if (typeof state.currentTokenIndex !== "number") {
+            state.currentTokenIndex = 0;
+        }
+
+        if (state.cachedLineText !== stream.string) {
+            const tokenizer = new Tokenizer(stream.string);
+            state.cachedLineText = stream.string;
+            state.cachedTokens = tokenizer.getTokens();
+            state.currentTokenIndex = 0;
+        }
+
+        const cachedTokens = state.cachedTokens;
+        let currentTokenIndex = state.currentTokenIndex;
+
+        while (
+            currentTokenIndex < cachedTokens.length &&
+            cachedTokens[currentTokenIndex].startIndex < stream.pos
+        ) {
+            currentTokenIndex += 1;
+        }
+        state.currentTokenIndex = currentTokenIndex;
+
+        const currToken = cachedTokens[currentTokenIndex];
         const tokenConverter = new TokenToCodeMirrorStyleConverter(
-            tokenizier.findCurrentToken(stream.pos),
+            currToken,
             stream,
             state
         );
-        return tokenConverter.convertTokenToCodeMirrorStyle();
+        const style = tokenConverter.convertTokenToCodeMirrorStyle();
+
+        if (
+            currToken &&
+            currToken.type !== jsoniqLexer.EOF &&
+            stream.pos >= currToken.startIndex + currToken.text.length
+        ) {
+            state.currentTokenIndex += 1;
+        }
+
+        return style;
     },
     copyState(state) {
         return {
@@ -284,6 +226,9 @@ export const jsoniqLanguageDefinition = StreamLanguage.define({
                 state.tokenValueClassFromPreviousTokenContext,
             hasTokenValueClassFromPreviousToken:
                 state.hasTokenValueClassFromPreviousToken,
+            cachedLineText: state.cachedLineText,
+            cachedTokens: state.cachedTokens,
+            currentTokenIndex: state.currentTokenIndex,
         };
     },
 });
