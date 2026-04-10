@@ -87,7 +87,7 @@ uv run pnpm run build:prod
 ## Project Structure
 
 - `src/`: Contains the source code of the extension.
-- `dest/plugin.js`: The main entry point for the extension after building.
+- `dist/`: Build artifacts for the extension.
 - `package.json`: Contains the configuration and dependencies for the extension.
 - `tests/`: Contains a set of tests relating to syntax highlighting.
 
