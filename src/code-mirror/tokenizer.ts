@@ -75,7 +75,26 @@ class Tokenizer {
     }
 
     public findCurrentToken(streamPos: number): Token | undefined {
-        return this.tokens.filter((t) => t.startIndex >= streamPos)[0];
+        /// Because the array of tokens is ordered by their position in the line, we can use a binary search to find the current token efficiently.
+        /// We are looking for a token such that token.startIndex <= streamPos <= token.stopIndex
+
+        let left = 0;
+        let right = this.tokens.length - 1;
+
+        while (left <= right) {
+            const mid = Math.floor((left + right) / 2);
+            const token = this.tokens[mid];
+
+            if (streamPos < token.startIndex) {
+                right = mid - 1;
+            } else if (streamPos > token.stopIndex) {
+                left = mid + 1;
+            } else {
+                return token; // Found the token that contains the stream position
+            }
+        }
+
+        return undefined; // No token found at the stream position
     }
 }
 
@@ -213,6 +232,8 @@ export const jsoniqLanguageDefinition = StreamLanguage.define({
         );
         const style = tokenConverter.convertTokenToCodeMirrorStyle();
 
+
+        /// The current token has been fully consumed, move to the next token for the next call
         if (
             currToken &&
             currToken.type !== jsoniqLexer.EOF &&
