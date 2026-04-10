@@ -33,17 +33,17 @@ function getJSONiqLexerType(text: string) {
         case "variable":
             return jsoniqLexer.Kvariable;
         case "$":
-            return jsoniqLexer.T__1;
+            return jsoniqLexer.Kdollar;
         case "declare":
             return jsoniqLexer.Kdeclare;
         case "+":
-            return jsoniqLexer.T__27;
+            return jsoniqLexer.Kplus;
         case ":=":
             return jsoniqLexer.Kassign;
         case ";":
-            return jsoniqLexer.T__0;
+            return jsoniqLexer.Ksemicolon;
         case ".":
-            return jsoniqLexer.T__35;
+            return jsoniqLexer.Kdot;
         default:
             if (text.match(/\d+$/)) {
                 return jsoniqLexer.NumericLiteral;
@@ -121,7 +121,7 @@ describe("tokenizer module single tokens", () => {
     });
 
     test("checks if '$' is correctly identified", () => {
-        const testTokenState = createCurrentToken("$", jsoniqLexer.T__1, 0, 1);
+        const testTokenState = createCurrentToken("$", jsoniqLexer.Kdollar, 0, 1);
         const testState = createState("", false);
         const testStringStream = new StringStream("$", 0, 0);
         const testConverter = new TokenToCodeMirrorStyleConverter(
@@ -197,7 +197,7 @@ describe("tokenizer module single tokens", () => {
     });
 
     test("checks if a '[' is correctly identified", () => {
-        const testTokenState = createCurrentToken("[", jsoniqLexer.T__33, 0);
+        const testTokenState = createCurrentToken("[", jsoniqLexer.Klbracket, 0);
         const testState = createState("", false);
         const testStringStream = new StringStream("[", 0, 0);
         const testConverter = new TokenToCodeMirrorStyleConverter(
@@ -209,7 +209,7 @@ describe("tokenizer module single tokens", () => {
     });
 
     test("checks if a '}' is correctly identified", () => {
-        const testTokenState = createCurrentToken("{", jsoniqLexer.T__3, 0);
+        const testTokenState = createCurrentToken("{", jsoniqLexer.Klbrace, 0);
         const testState = createState("", false);
         const testStringStream = new StringStream("{", 0, 0);
         const testConverter = new TokenToCodeMirrorStyleConverter(
@@ -221,7 +221,7 @@ describe("tokenizer module single tokens", () => {
     });
 
     test("checks if a '(' is correctly identified", () => {
-        const testTokenState = createCurrentToken("(", jsoniqLexer.T__4, 0);
+        const testTokenState = createCurrentToken("(", jsoniqLexer.Klparen, 0);
         const testState = createState("", false);
         const testStringStream = new StringStream("(", 0, 0);
         const testConverter = new TokenToCodeMirrorStyleConverter(
@@ -233,7 +233,7 @@ describe("tokenizer module single tokens", () => {
     });
 
     test("checks if a '+' is correctly identified", () => {
-        const testTokenState = createCurrentToken("+", jsoniqLexer.T__27, 0);
+        const testTokenState = createCurrentToken("+", jsoniqLexer.Kplus, 0);
         const testState = createState("", false);
         const testStringStream = new StringStream("+", 0, 0);
         const testConverter = new TokenToCodeMirrorStyleConverter(
@@ -244,7 +244,7 @@ describe("tokenizer module single tokens", () => {
         expect(testConverter.convertTokenToCodeMirrorStyle()).toBe("operator");
     });
     test("checks if a '-' is correctly identified", () => {
-        const testTokenState = createCurrentToken("-", jsoniqLexer.T__28, 0);
+        const testTokenState = createCurrentToken("-", jsoniqLexer.Kminus, 0);
         const testState = createState("", false);
         const testStringStream = new StringStream("-", 0, 0);
         const testConverter = new TokenToCodeMirrorStyleConverter(
@@ -256,7 +256,7 @@ describe("tokenizer module single tokens", () => {
     });
 
     test("checks if a '*' is correctly identified", () => {
-        const testTokenState = createCurrentToken("*", jsoniqLexer.T__6, 0);
+        const testTokenState = createCurrentToken("*", jsoniqLexer.Kasterisk, 0);
         const testState = createState("", false);
         const testStringStream = new StringStream("*", 0, 0);
         const testConverter = new TokenToCodeMirrorStyleConverter(
@@ -268,7 +268,7 @@ describe("tokenizer module single tokens", () => {
     });
 
     test("checks if a 'div' is correctly identified", () => {
-        const testTokenState = createCurrentToken("div", jsoniqLexer.T__29, 0);
+        const testTokenState = createCurrentToken("div", jsoniqLexer.Kdiv, 0);
         const testState = createState("", false);
         const testStringStream = new StringStream("div", 0, 0);
         const testConverter = new TokenToCodeMirrorStyleConverter(
@@ -280,7 +280,7 @@ describe("tokenizer module single tokens", () => {
     });
 
     test("checks if a 'mod' is correctly identified", () => {
-        const testTokenState = createCurrentToken("mod", jsoniqLexer.T__31, 0);
+        const testTokenState = createCurrentToken("mod", jsoniqLexer.Kmod, 0);
         const testState = createState("", false);
         const testStringStream = new StringStream("mod", 0, 0);
         const testConverter = new TokenToCodeMirrorStyleConverter(
@@ -332,7 +332,7 @@ describe("tokenizer module single tokens", () => {
     });
 
     test("checks if a '%' is correctly identified", () => {
-        const testTokenState = createCurrentToken("%", jsoniqLexer.T__8, 0);
+        const testTokenState = createCurrentToken("%", jsoniqLexer.Kannotation, 0);
         const testState = createState("", false);
         const testStringStream = new StringStream("%", 0, 0);
         const testConverter = new TokenToCodeMirrorStyleConverter(
