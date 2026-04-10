@@ -14,19 +14,34 @@ import {
     NAMESPACE_TOKENS,
 } from "./tokenSets.js";
 
+/**
+ * Token type ID from the JSONiq ANTLR lexer.
+ * Values correspond to constants like jsoniqLexer.Kdot, jsoniqLexer.STRING, etc.
+ */
+type JsoniqTokenType = number;
+
 interface Token {
     text: string;
-    type: number;
+    /** Token type ID from jsoniqLexer (e.g., jsoniqLexer.Kdot, jsoniqLexer.STRING) */
+    type: JsoniqTokenType;
     startIndex: number;
     stopIndex: number;
 }
 
 interface TokenizerState {
-    tokenValueClassFromPreviousTokenContext: string;
-    hasTokenValueClassFromPreviousToken: boolean;
+    /// Cache the current line and its tokens
+    /// Because CodeMirror may call the tokenizer multiple times for the same line, 
+    ///     and we want to avoid re-tokenizing.
     cachedLineText?: string;
     cachedTokens?: Token[];
+
+    /// token() is called sequentially for each token in the line, by keeping track of the current token index, we can find the current token without searching
     currentTokenIndex?: number;
+
+    /// For some tokens (e.g. dot), we want to set the style of the following token based on the current token, this is to keep track of that context.
+    /// For example, after a dot operator, the following token is likely a property name, so we want to style it as such.
+    tokenValueClassFromPreviousTokenContext: string;
+    hasTokenValueClassFromPreviousToken: boolean;
 }
 
 class Tokenizer {
