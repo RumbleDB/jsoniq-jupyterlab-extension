@@ -32,11 +32,11 @@ interface TokenizerState {
     /// Cache the current line and its tokens
     /// Because CodeMirror may call the tokenizer multiple times for the same line, 
     ///     and we want to avoid re-tokenizing.
-    cachedLineText?: string;
-    cachedTokens?: Token[];
+    cachedLineText: string;
+    cachedTokens: Token[];
 
     /// token() is called sequentially for each token in the line, by keeping track of the current token index, we can find the current token without searching
-    currentTokenIndex?: number;
+    currentTokenIndex: number;
 
     /// For some tokens (e.g. dot), we want to set the style of the following token based on the current token, this is to keep track of that context.
     /// For example, after a dot operator, the following token is likely a property name, so we want to style it as such.
@@ -185,21 +185,13 @@ export const jsoniqLanguageDefinition = StreamLanguage.define({
         };
     },
     token: (stream, state: TokenizerState) => {
-        if (typeof state.cachedLineText !== "string") {
-            state.cachedLineText = "";
-        }
-        if (!state.cachedTokens) {
-            state.cachedTokens = [];
-        }
-        if (typeof state.currentTokenIndex !== "number") {
-            state.currentTokenIndex = 0;
-        }
-
         if (state.cachedLineText !== stream.string) {
             const tokenizer = new Tokenizer(stream.string);
+
             state.cachedLineText = stream.string;
             state.cachedTokens = tokenizer.getTokens();
             state.currentTokenIndex = 0;
+            state.nextTokenStyle = null;
         }
 
         const cachedTokens = state.cachedTokens;
