@@ -14,9 +14,9 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/CaiJimmy/jsoniq-jupyterlab"
-Repository = "https://github.com/CaiJimmy/jsoniq-jupyterlab.git"
-Issues = "https://github.com/CaiJimmy/jsoniq-jupyterlab/issues"
+Homepage = "https://github.com/RumbleDB/jsoniq-jupyterlab-extension"
+Repository = "https://github.com/RumbleDB/jsoniq-jupyterlab-extension.git"
+Issues = "https://github.com/RumbleDB/jsoniq-jupyterlab-extension/issues"
 
 [tool.hatch.version]
 source = "nodejs"
