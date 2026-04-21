@@ -106,7 +106,7 @@ export class TokenToCodeMirrorStyleConverter {
             return style?.toString() || tags.variableName.toString();
         } else {
             this.stream.next();
-            return null;
+            return 'invalid';
         }
     }
 }
