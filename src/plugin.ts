@@ -1,29 +1,47 @@
 import {
-  JupyterFrontEnd,
-  JupyterFrontEndPlugin,
+    JupyterFrontEnd,
+    JupyterFrontEndPlugin,
 } from "@jupyterlab/application";
-import { ILSPCodeExtractorsManager } from "@jupyterlab/lsp";
-import { JSONiqExtractor } from "./extractor/extractors.js";
 import { IEditorLanguageRegistry } from "@jupyterlab/codemirror";
-import { RegisterJSONiqInCodeMirror } from "./code_mirror_configuration/register-language.js";
+import { registerJSONiqLanguage } from "./code-mirror/register-language.js";
+import { jsoniqIcon } from "./icon.js";
+import { JSONIQ_EXTENSION, JSONIQ_LANGUAGE, JSONIQ_LANGUAGE_DISPLAY_NAME, JSONIQ_MIME_TYPE, JUPYTER_PLUGIN_ID } from "./const.js";
+import {
+    EditorExtensionRegistry,
+    IEditorExtensionRegistry
+} from '@jupyterlab/codemirror';
+import { languageSelection } from "./code-mirror/highlight.js";
 
-const PLUGIN_ID = "davidbuzatu-marian/jsoniq-jupyter-plugin:jsoniq";
 const plugin: JupyterFrontEndPlugin<void> = {
-  id: PLUGIN_ID,
-  requires: [ILSPCodeExtractorsManager as any, IEditorLanguageRegistry],
-  activate: (
-    _app: JupyterFrontEnd,
-    extractors: ILSPCodeExtractorsManager,
-    codeMirrorRecognizedLanguages: IEditorLanguageRegistry
-  ) => {
-    const jsoniqExtractor = new JSONiqExtractor(extractors);
-    const jsoniqLanguageRegister = new RegisterJSONiqInCodeMirror(
-      codeMirrorRecognizedLanguages
-    );
-    jsoniqExtractor.registerExtractor();
-    jsoniqLanguageRegister.registerJSONiqLanguage();
-  },
-  autoStart: true,
+    id: JUPYTER_PLUGIN_ID,
+    requires: [IEditorLanguageRegistry, IEditorExtensionRegistry],
+    activate: (
+        app: JupyterFrontEnd,
+        codeMirrorRecognizedLanguages: IEditorLanguageRegistry,
+        extensions: IEditorExtensionRegistry
+    ) => {
+        console.log("JSONiq JupyterLab extension loaded");
+        registerJSONiqLanguage(codeMirrorRecognizedLanguages);
+
+        app.docRegistry.addFileType({
+            name: JSONIQ_LANGUAGE,
+            displayName: JSONIQ_LANGUAGE_DISPLAY_NAME,
+            contentType: "code",
+            fileFormat: "text",
+            extensions: [JSONIQ_EXTENSION],
+            mimeTypes: [JSONIQ_MIME_TYPE],
+            icon: jsoniqIcon,
+        });
+
+        extensions.addExtension({
+            name: JUPYTER_PLUGIN_ID,
+            default: 1,
+            factory: () =>
+                EditorExtensionRegistry.createConfigurableExtension(() => languageSelection())
+        })
+
+    },
+    autoStart: true,
 };
 
 export default plugin;

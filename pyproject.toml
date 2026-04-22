@@ -1,0 +1,58 @@
+#:tombi schema.strict = false
+[build-system]
+requires = ["hatchling>=1.5.0", "hatch-jupyter-builder>=0.5.0", "hatch-nodejs-version", "jupyterlab>=4.0.0,<5", "setuptools"]
+build-backend = "hatchling.build"
+
+[project]
+name = "jsoniq-jupyterlab-extension"
+dynamic = ["version", "description", "authors", "keywords"]
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.11"
+dependencies = [
+    "jupyterlab>=4.0.0,<5",
+]
+
+[project.urls]
+Homepage = "https://github.com/RumbleDB/jsoniq-jupyterlab-extension"
+Repository = "https://github.com/RumbleDB/jsoniq-jupyterlab-extension.git"
+Issues = "https://github.com/RumbleDB/jsoniq-jupyterlab-extension/issues"
+
+[tool.hatch.version]
+source = "nodejs"
+
+[tool.hatch.metadata.hooks.nodejs]
+fields = ["description", "authors", "keywords"]
+
+[tool.hatch.build]
+artifacts = ["dist/labextension"]
+
+[tool.hatch.build.targets.wheel.shared-data]
+"dist/labextension" = "share/jupyter/labextensions/jsoniq-jupyterlab-extension"
+"dist/labextension/install.json" = "share/jupyter/labextensions/jsoniq-jupyterlab-extension/install.json"
+
+[tool.hatch.build.targets.wheel]
+packages = ["jsoniq_jupyterlab"]
+
+[tool.hatch.build.targets.sdist]
+exclude = [
+    ".github",
+]
+
+[tool.hatch.build.hooks.jupyter-builder]
+dependencies = ["hatch-jupyter-builder>=0.5.0"]
+build-function = "hatch_jupyter_builder.npm_builder"
+ensured-targets = [
+    "dist/labextension/package.json",
+]
+skip-if-exists = ["dist/labextension/package.json"]
+
+[tool.hatch.build.hooks.jupyter-builder.build-kwargs]
+npm = ["pnpm"]
+build_cmd = "build:prod"
+
+[tool.jupyter-releaser.options]
+version_cmd = "hatch version"
+
+[tool.jupyter-releaser.hooks]
+# hatch-jupyter-builder handles the build
