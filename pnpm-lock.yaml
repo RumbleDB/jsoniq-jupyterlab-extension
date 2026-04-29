@@ -17,6 +17,9 @@ importers:
       '@jest/globals':
         specifier: ^30.3.0
         version: 30.3.0
+      '@jimmycai/jsoniq-language-server':
+        specifier: 0.1.0-dev.3e506d9
+        version: 0.1.0-dev.3e506d9
       '@jupyterlab/application':
         specifier: ^4.5.6
         version: 4.5.6(react@18.3.1)
@@ -401,6 +404,9 @@ packages:
   '@jest/types@30.3.0':
     resolution: {integrity: sha512-JHm87k7bA33hpBngtU8h6UBub/fqqA9uXfw+21j5Hmk7ooPHlboRNxHq0JcMtC+n8VJGP1mcfnD3Mk+XKe1oSw==}
     engines: {node: ^18.14.0 || ^20.0.0 || ^22.0.0 || >=24.0.0}
+
+  '@jimmycai/jsoniq-language-server@0.1.0-dev.3e506d9':
+    resolution: {integrity: sha512-14JHC5j9LgugaMaVJo931qqiEpDI7XPMP5E028i0BqoFmOY52cttAqit5QqmCD9u7KTD9VwKC93VaylvFpvDQg==}
 
   '@jridgewell/gen-mapping@0.3.13':
     resolution: {integrity: sha512-2kkt/7niJ6MgEPxF0bYdQ6etZaA+fQvDcLKckhy1yIQOzaoKjBBjSj63/aLVjYE3qhRt5dvM+uUyfCg6UKCBbA==}
@@ -955,6 +961,9 @@ packages:
   antlr-ng@1.0.10:
     resolution: {integrity: sha512-fw3NdsQP3dabuZrDhKAMewrBsY5KSAcMrvhWBVDmHYegv5D51pypzCYK1PpjaRVKcVeP/5xKfqJY31TvXACOdA==}
     hasBin: true
+
+  antlr4-c3@3.4.4:
+    resolution: {integrity: sha512-ixp1i17ypbRzZnffdarIfCVEXJwPydtDt61SHMGkc+UCD7rrbfvHESTMTgx8jFhUgKAgcHyt9060kQ8nU3vlxA==}
 
   antlr4ng@3.0.15:
     resolution: {integrity: sha512-VELFqTfcpGI2bj6ScMWuxM3FI6HOsojrgmnw3cCbUtsQ1DNOq32wJsjOt7vLvfIniyyuE1DIYegGcuFmn+jgyw==}
@@ -2464,6 +2473,23 @@ packages:
   validate.io-number@1.0.3:
     resolution: {integrity: sha512-kRAyotcbNaSYoDnXvb4MHg/0a1egJdLwS6oJ38TJY7aw9n93Fl/3blIXdyYvPOp55CNxywooG/3BcrwNrBpcSg==}
 
+  vscode-jsonrpc@8.2.0:
+    resolution: {integrity: sha512-C+r0eKJUIfiDIfwJhria30+TYWPtuHJXHtI7J0YlOmKAo7ogxP20T0zxB7HZQIFhIyvoBPwWskjxrvAtfjyZfA==}
+    engines: {node: '>=14.0.0'}
+
+  vscode-languageserver-protocol@3.17.5:
+    resolution: {integrity: sha512-mb1bvRJN8SVznADSGWM9u/b07H7Ecg0I3OgXDuLdn307rl/J3A9YD6/eYOssqhecL27hK1IPZAsaqh00i/Jljg==}
+
+  vscode-languageserver-textdocument@1.0.12:
+    resolution: {integrity: sha512-cxWNPesCnQCcMPeenjKKsOCKQZ/L6Tv19DTRIGuLWe32lyzWhihGVJ/rcckZXJxfdKCFvRLS3fpBIsV/ZGX4zA==}
+
+  vscode-languageserver-types@3.17.5:
+    resolution: {integrity: sha512-Ld1VelNuX9pdF39h2Hgaeb5hEZM2Z3jUrrMgWQAu82jMtZp7p3vJT3BzToKtZI7NgQssZje5o0zryOrhQvzQAg==}
+
+  vscode-languageserver@9.0.1:
+    resolution: {integrity: sha512-woByF3PDpkHFUreUa7Hos7+pUWdeWMXRd26+ZX2A8cFx6v/JPTtd4/uN0/jB6XQHYaOlHbio03NTHCqrgG5n7g==}
+    hasBin: true
+
   w3c-keyname@2.2.8:
     resolution: {integrity: sha512-dpojBhNsCNN7T82Tm7k26A6G9ML3NkhDsnw9n/eoxSRlVBB4CEtIQ/KTCLI2Fwf3ataSXRhYFkQi3SlnFwPvPQ==}
 
@@ -3162,6 +3188,14 @@ snapshots:
       '@types/node': 25.6.0
       '@types/yargs': 17.0.35
       chalk: 4.1.2
+
+  '@jimmycai/jsoniq-language-server@0.1.0-dev.3e506d9':
+    dependencies:
+      antlr-ng: 1.0.10
+      antlr4-c3: 3.4.4
+      antlr4ng: 3.0.16
+      vscode-languageserver: 9.0.1
+      vscode-languageserver-textdocument: 1.0.12
 
   '@jridgewell/gen-mapping@0.3.13':
     dependencies:
@@ -4068,6 +4102,10 @@ snapshots:
       commander: 13.1.0
       stringtemplate4ts: 1.0.9
       unicode-properties: 1.4.1
+
+  antlr4-c3@3.4.4:
+    dependencies:
+      antlr4ng: 3.0.16
 
   antlr4ng@3.0.15: {}
 
@@ -5657,6 +5695,21 @@ snapshots:
       validate.io-number: 1.0.3
 
   validate.io-number@1.0.3: {}
+
+  vscode-jsonrpc@8.2.0: {}
+
+  vscode-languageserver-protocol@3.17.5:
+    dependencies:
+      vscode-jsonrpc: 8.2.0
+      vscode-languageserver-types: 3.17.5
+
+  vscode-languageserver-textdocument@1.0.12: {}
+
+  vscode-languageserver-types@3.17.5: {}
+
+  vscode-languageserver@9.0.1:
+    dependencies:
+      vscode-languageserver-protocol: 3.17.5
 
   w3c-keyname@2.2.8: {}
 

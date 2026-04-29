@@ -229,5 +229,4 @@ jsoniq_jupyter_lsp.egg-info
 .virtual_documents/
 .yarn
 tsconfig.tsbuildinfo
-jsoniq_jupyterlab_extension
 .DS_Store
