@@ -20,10 +20,16 @@ importers:
       '@jimmycai/jsoniq-language-server':
         specifier: 0.1.0-dev.3e506d9
         version: 0.1.0-dev.3e506d9
+      '@jupyter-lsp/jupyterlab-lsp':
+        specifier: ^5.3.0
+        version: 5.3.0(react@18.3.1)
       '@jupyterlab/application':
         specifier: ^4.5.7
         version: 4.5.7(react@18.3.1)
       '@jupyterlab/codemirror':
+        specifier: ^4.5.7
+        version: 4.5.7(react@18.3.1)
+      '@jupyterlab/lsp':
         specifier: ^4.5.7
         version: 4.5.7(react@18.3.1)
       '@jupyterlab/ui-components':
@@ -427,6 +433,21 @@ packages:
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
 
+  '@jupyter-lsp/code-jumpers@2.1.0':
+    resolution: {integrity: sha512-9MdsZCM62zX5IGU7Tvy12gr2bLl11c4bT3YoH+ZJu1FpksgJkh0DxBBB5lK7s5zy/mADGpuTlAEKUSwyiNyccg==}
+
+  '@jupyter-lsp/completion-theme@4.1.0':
+    resolution: {integrity: sha512-+Oid8D+u2xOiGH4TM2F25cPj3fElKCaPDZh81e7BgZVs1Ck8rH8O5ux1wWvW7a5Fy5eb8MVA1fWFzoOUMXlH+w==}
+
+  '@jupyter-lsp/jupyterlab-lsp@5.3.0':
+    resolution: {integrity: sha512-cFWR9tnQ+imSyHhbUtABYIYWkCDIisUQwHeQx/cNBOn5n+lEp2MYlRQA2VqjreP/JJDCEZIAlafF+jsTv2nLxg==}
+
+  '@jupyter-lsp/theme-material@3.0.0':
+    resolution: {integrity: sha512-B2ggTpqPmdkHShCFxgsE1CqTOWYvkJPvg7HFUm40MGjJ+OqmzeQQx4QS25RTgxEpCzEtBPTU0i9GSW3CSfID6w==}
+
+  '@jupyter-lsp/theme-vscode@3.0.0':
+    resolution: {integrity: sha512-waUUKqM/8n2C7zppwD02vhxIRm4vPGOKWtKKcmJKjgBMdDG7a9kPt9IIvGqT8VMp6uKpotlT5G7iIfCbNwNDtQ==}
+
   '@jupyter/react-components@0.16.7':
     resolution: {integrity: sha512-BKIPkJ9V011uhtdq1xBOu2M3up59CqsRbDS4aq8XhnHR4pwqfRV6k6irE5YBOETCoIwWZZ5RZO+cJcZ3DcsT5A==}
 
@@ -460,6 +481,9 @@ packages:
 
   '@jupyterlab/documentsearch@4.5.7':
     resolution: {integrity: sha512-T2D0n0sEKrenjZRUsOKp/CL58mLjOvSmgIgdG571Xkbr4igPeEMqwbmEJIybNxghosckxMUx26ObROuy2sa9Gw==}
+
+  '@jupyterlab/lsp@4.5.7':
+    resolution: {integrity: sha512-t3qw0tK+jFhcTNnhQ4mEuJoFYFDi5uA1kcBDhGzBMQewBLsrynx4P7udH1wlchQGzcGT39IcbUPnAX44qu/GYg==}
 
   '@jupyterlab/nbformat@4.5.7':
     resolution: {integrity: sha512-5sFibmPFACnMVA0QwHOUGmTNq8oKBIh8DTDQ8ysTn1PYK4Zb8QYtNFYYBIh0sODy87e3H1b9DL8YVEQT91SAmQ==}
@@ -636,6 +660,12 @@ packages:
     engines: {node: '>=14'}
     peerDependencies:
       react: ^16.14.0 || >=17
+
+  '@rjsf/validator-ajv8@5.24.13':
+    resolution: {integrity: sha512-oWHP7YK581M8I5cF1t+UXFavnv+bhcqjtL1a7MG/Kaffi0EwhgcYjODrD8SsnrhncsEYMqSECr4ZOEoirnEUWw==}
+    engines: {node: '>=14'}
+    peerDependencies:
+      '@rjsf/utils': ^5.24.x
 
   '@sinclair/typebox@0.34.49':
     resolution: {integrity: sha512-brySQQs7Jtn0joV8Xh9ZV/hZb9Ozb0pmazDIASBkYKCjXrXU3mpcFahmK/z4YDhGkQvP9mWJbVyahdtU5wQA+A==}
@@ -1796,6 +1826,9 @@ packages:
   lodash.memoize@4.1.2:
     resolution: {integrity: sha512-t7j+NzmgnQzTAYXcsHYLgimltOV1MXHtlOWf6GjL9Kj8GK5FInw5JotxvbOs+IvV1/Dzo04/fCGfLVs7aXb4Ag==}
 
+  lodash.mergewith@4.6.2:
+    resolution: {integrity: sha512-GK3g5RPZWTRSeLSpgP8Xhra+pnjBC56q9FZYe1d5RN3TJ35dbkGy3YqBSMbyCrlbi+CM9Z3Jk5yTL7RCsqboyQ==}
+
   lodash@4.18.1:
     resolution: {integrity: sha512-dMInicTPVE8d1e5otfwmmjlxkZoUpiVLwyeTdUsi/Caj/gfzzblBcCE5sRHV/AsjuCmxWrte2TNGSYuCeCq+0Q==}
 
@@ -2473,6 +2506,10 @@ packages:
   validate.io-number@1.0.3:
     resolution: {integrity: sha512-kRAyotcbNaSYoDnXvb4MHg/0a1egJdLwS6oJ38TJY7aw9n93Fl/3blIXdyYvPOp55CNxywooG/3BcrwNrBpcSg==}
 
+  vscode-jsonrpc@6.0.0:
+    resolution: {integrity: sha512-wnJA4BnEjOSyFMvjZdpiOwhSq9uDoK8e/kpRJDTaMYzwlkrhG1fwDIZI94CLsLzlCK5cIbMMtFlJlfR57Lavmg==}
+    engines: {node: '>=8.0.0 || >=10.0.0'}
+
   vscode-jsonrpc@8.2.0:
     resolution: {integrity: sha512-C+r0eKJUIfiDIfwJhria30+TYWPtuHJXHtI7J0YlOmKAo7ogxP20T0zxB7HZQIFhIyvoBPwWskjxrvAtfjyZfA==}
     engines: {node: '>=14.0.0'}
@@ -2489,6 +2526,9 @@ packages:
   vscode-languageserver@9.0.1:
     resolution: {integrity: sha512-woByF3PDpkHFUreUa7Hos7+pUWdeWMXRd26+ZX2A8cFx6v/JPTtd4/uN0/jB6XQHYaOlHbio03NTHCqrgG5n7g==}
     hasBin: true
+
+  vscode-ws-jsonrpc@1.0.2:
+    resolution: {integrity: sha512-09OpRC0RcqZs4DleJRgs+R+7gQkwb4tgvsL43lzVZwW4N5NO3H/9sLNeKPBt83k7WyA8qBZjrzM6X7tKFpFrjQ==}
 
   w3c-keyname@2.2.8:
     resolution: {integrity: sha512-dpojBhNsCNN7T82Tm7k26A6G9ML3NkhDsnw9n/eoxSRlVBB4CEtIQ/KTCLI2Fwf3ataSXRhYFkQi3SlnFwPvPQ==}
@@ -3221,6 +3261,33 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
+  '@jupyter-lsp/code-jumpers@2.1.0': {}
+
+  '@jupyter-lsp/completion-theme@4.1.0': {}
+
+  '@jupyter-lsp/jupyterlab-lsp@5.3.0(react@18.3.1)':
+    dependencies:
+      '@jupyter-lsp/code-jumpers': 2.1.0
+      '@jupyter-lsp/completion-theme': 4.1.0
+      '@jupyter-lsp/theme-material': 3.0.0
+      '@jupyter-lsp/theme-vscode': 3.0.0
+      '@jupyterlab/lsp': 4.5.7(react@18.3.1)
+      '@rjsf/utils': 5.24.13(react@18.3.1)
+      '@rjsf/validator-ajv8': 5.24.13(@rjsf/utils@5.24.13(react@18.3.1))
+      lodash.mergewith: 4.6.2
+    transitivePeerDependencies:
+      - bufferutil
+      - react
+      - utf-8-validate
+
+  '@jupyter-lsp/theme-material@3.0.0':
+    dependencies:
+      '@jupyter-lsp/completion-theme': 4.1.0
+
+  '@jupyter-lsp/theme-vscode@3.0.0':
+    dependencies:
+      '@jupyter-lsp/completion-theme': 4.1.0
+
   '@jupyter/react-components@0.16.7':
     dependencies:
       '@jupyter/web-components': 0.16.7
@@ -3449,6 +3516,28 @@ snapshots:
       react: 18.3.1
     transitivePeerDependencies:
       - bufferutil
+      - utf-8-validate
+
+  '@jupyterlab/lsp@4.5.7(react@18.3.1)':
+    dependencies:
+      '@jupyterlab/apputils': 4.6.7
+      '@jupyterlab/codeeditor': 4.5.7
+      '@jupyterlab/codemirror': 4.5.7(react@18.3.1)
+      '@jupyterlab/coreutils': 6.5.7
+      '@jupyterlab/docregistry': 4.5.7
+      '@jupyterlab/services': 7.5.7(react@18.3.1)
+      '@jupyterlab/translation': 4.5.7(react@18.3.1)
+      '@lumino/coreutils': 2.2.2
+      '@lumino/disposable': 2.1.5
+      '@lumino/signaling': 2.1.5
+      '@lumino/widgets': 2.7.5
+      lodash.mergewith: 4.6.2
+      vscode-jsonrpc: 6.0.0
+      vscode-languageserver-protocol: 3.17.5
+      vscode-ws-jsonrpc: 1.0.2
+    transitivePeerDependencies:
+      - bufferutil
+      - react
       - utf-8-validate
 
   '@jupyterlab/nbformat@4.5.7':
@@ -3792,6 +3881,14 @@ snapshots:
       lodash-es: 4.18.1
       react: 18.3.1
       react-is: 18.3.1
+
+  '@rjsf/validator-ajv8@5.24.13(@rjsf/utils@5.24.13(react@18.3.1))':
+    dependencies:
+      '@rjsf/utils': 5.24.13(react@18.3.1)
+      ajv: 8.20.0
+      ajv-formats: 2.1.1(ajv@8.20.0)
+      lodash: 4.18.1
+      lodash-es: 4.18.1
 
   '@sinclair/typebox@0.34.49': {}
 
@@ -5085,6 +5182,8 @@ snapshots:
 
   lodash.memoize@4.1.2: {}
 
+  lodash.mergewith@4.6.2: {}
+
   lodash@4.18.1: {}
 
   loose-envify@1.4.0:
@@ -5695,6 +5794,8 @@ snapshots:
 
   validate.io-number@1.0.3: {}
 
+  vscode-jsonrpc@6.0.0: {}
+
   vscode-jsonrpc@8.2.0: {}
 
   vscode-languageserver-protocol@3.17.5:
@@ -5709,6 +5810,10 @@ snapshots:
   vscode-languageserver@9.0.1:
     dependencies:
       vscode-languageserver-protocol: 3.17.5
+
+  vscode-ws-jsonrpc@1.0.2:
+    dependencies:
+      vscode-jsonrpc: 8.2.0
 
   w3c-keyname@2.2.8: {}
 

@@ -10,18 +10,23 @@ import {
     EditorExtensionRegistry,
     IEditorExtensionRegistry
 } from '@jupyterlab/codemirror';
+import { ILSPCodeExtractorsManager } from '@jupyterlab/lsp';
 import { languageSelection } from "./code-mirror/highlight.js";
+import { registerJSONiqMagicLSP } from "./lsp/register.js";
 
 const plugin: JupyterFrontEndPlugin<void> = {
     id: JUPYTER_PLUGIN_ID,
     requires: [IEditorLanguageRegistry, IEditorExtensionRegistry],
+    optional: [ILSPCodeExtractorsManager],      /// In case jupyterlab-lsp is not installed, the plugin will still work without registering the code extractor
     activate: (
         app: JupyterFrontEnd,
         codeMirrorRecognizedLanguages: IEditorLanguageRegistry,
-        extensions: IEditorExtensionRegistry
+        extensions: IEditorExtensionRegistry,
+        lspCodeExtractorsManager: ILSPCodeExtractorsManager | null
     ) => {
         console.log("JSONiq JupyterLab extension loaded");
         registerJSONiqLanguage(codeMirrorRecognizedLanguages);
+        registerJSONiqMagicLSP(lspCodeExtractorsManager);
 
         app.docRegistry.addFileType({
             name: JSONIQ_LANGUAGE,
@@ -39,7 +44,6 @@ const plugin: JupyterFrontEndPlugin<void> = {
             factory: () =>
                 EditorExtensionRegistry.createConfigurableExtension(() => languageSelection())
         })
-
     },
     autoStart: true,
 };
