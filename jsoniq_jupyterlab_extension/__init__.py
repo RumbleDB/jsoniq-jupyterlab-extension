@@ -12,7 +12,3 @@ if (lab_path / "package.json").exists():
         __version__ = json.load(fid)["version"]
 else:
     __version__ = "0.0.0"  # Fallback
-
-
-def _jupyter_labextension_paths():
-    return [{"src": "labextension", "dest": "jsoniq-jupyterlab-extension"}]
