@@ -17,6 +17,7 @@ class JSONIQLanguageServer(NodeModuleSpec):
             yarn="yarn global add @jimmycai/jsoniq-language-server",
             pnpm="pnpm add -g @jimmycai/jsoniq-language-server",
         ),
+        env={"JSONIQ_LSP_DEBUG": "1"},
     )
 
 
