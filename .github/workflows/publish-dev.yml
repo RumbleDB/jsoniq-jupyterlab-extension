@@ -1,0 +1,81 @@
+name: Publish development distribution to PyPI
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build distribution 📦
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v5
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build antlr4 grammar
+        run: pnpm run antlr4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        run: uv python install
+
+      - name: Install Python dependencies
+        run: uv sync --locked --all-extras --dev
+        env:
+          HATCH_BUILD_HOOKS_ENABLE: "false"
+
+      - name: Set package version to dev version
+        run: |
+          BASE_VERSION="$(node -p "require('./package.json').version")"
+          DEV_VERSION="$(node -e 'const version = process.argv[1]; const [major, minor, patch] = version.split(".").map(Number); console.log(`${major}.${minor}.${patch + 1}.dev${process.argv[2]}`);' "$BASE_VERSION" "${GITHUB_RUN_NUMBER}")"
+          pnpm version "${DEV_VERSION}" --no-git-tag-version
+          echo "Publishing jsoniq-jupyterlab-extension@${DEV_VERSION}"
+
+      - name: Build
+        run: uv run pnpm run build:prod # Because we need to use jupyter, which is a Python package
+
+      - name: Build distribution package
+        run: uv build -o dist/whl
+
+      - name: Store the distribution packages
+        uses: actions/upload-artifact@v6
+        with:
+          name: python-package-distributions
+          path: dist/whl
+
+  publish-to-pypi:
+    name: >-
+      Publish Python 🐍 distribution 📦 to PyPI
+    needs:
+      - build
+    runs-on: ubuntu-latest
+    environment:
+      name: release
+      url: https://pypi.org/p/jsoniq-jupyterlab-extension
+    permissions:
+      id-token: write # IMPORTANT: mandatory for trusted publishing
+
+    steps:
+      - name: Download all the dists
+        uses: actions/download-artifact@v6
+        with:
+          name: python-package-distributions
+          path: dist/
+      - name: Publish distribution 📦 to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
