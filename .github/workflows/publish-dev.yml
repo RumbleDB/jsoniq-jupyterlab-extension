@@ -5,7 +5,7 @@ on:
 
 jobs:
   build:
-    name: Build distribution 📦
+    name: Build distribution
     runs-on: ubuntu-latest
 
     steps:
@@ -43,7 +43,7 @@ jobs:
       - name: Set package version to dev version
         run: |
           BASE_VERSION="$(node -p "require('./package.json').version")"
-          DEV_VERSION="$(node -e 'const version = process.argv[1]; const [major, minor, patch] = version.split(".").map(Number); console.log(`${major}.${minor}.${patch + 1}.dev${process.argv[2]}`);' "$BASE_VERSION" "${GITHUB_RUN_NUMBER}")"
+          DEV_VERSION="${BASE_VERSION}-dev.${GITHUB_SHA::7}"
           pnpm version "${DEV_VERSION}" --no-git-tag-version
           echo "Publishing jsoniq-jupyterlab-extension@${DEV_VERSION}"
 
@@ -61,7 +61,7 @@ jobs:
 
   publish-to-pypi:
     name: >-
-      Publish Python 🐍 distribution 📦 to PyPI
+      Publish Python distribution to PyPI
     needs:
       - build
     runs-on: ubuntu-latest
@@ -77,5 +77,5 @@ jobs:
         with:
           name: python-package-distributions
           path: dist/
-      - name: Publish distribution 📦 to PyPI
+      - name: Publish distribution to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
