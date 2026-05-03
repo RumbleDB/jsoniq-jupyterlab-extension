@@ -18,8 +18,8 @@ importers:
         specifier: ^30.3.0
         version: 30.3.0
       '@jimmycai/jsoniq-language-server':
-        specifier: 0.1.0-dev.47aabd9
-        version: 0.1.0-dev.47aabd9
+        specifier: 0.1.0-dev.4e376d6
+        version: 0.1.0-dev.4e376d6
       '@jupyter-lsp/jupyterlab-lsp':
         specifier: ^5.3.0
         version: 5.3.0(react@18.3.1)
@@ -411,8 +411,8 @@ packages:
     resolution: {integrity: sha512-JHm87k7bA33hpBngtU8h6UBub/fqqA9uXfw+21j5Hmk7ooPHlboRNxHq0JcMtC+n8VJGP1mcfnD3Mk+XKe1oSw==}
     engines: {node: ^18.14.0 || ^20.0.0 || ^22.0.0 || >=24.0.0}
 
-  '@jimmycai/jsoniq-language-server@0.1.0-dev.47aabd9':
-    resolution: {integrity: sha512-/stmPdTCKu2d9DWgk8z176EMeuKo43liseCNIjeIC4YrC/GCr8Ulh4R1dP3w1sX/5JArSAtZ5XVK+OvFtd74dg==}
+  '@jimmycai/jsoniq-language-server@0.1.0-dev.4e376d6':
+    resolution: {integrity: sha512-Jx1cRntnKmPMp3K6ZjuKwL72jED2LpVGA2+rpdcBMmiN5OWc9jsL8WcQ/8ccBHx6J5U1PiHaLyCNEr81F3U8Nw==}
 
   '@jridgewell/gen-mapping@0.3.13':
     resolution: {integrity: sha512-2kkt/7niJ6MgEPxF0bYdQ6etZaA+fQvDcLKckhy1yIQOzaoKjBBjSj63/aLVjYE3qhRt5dvM+uUyfCg6UKCBbA==}
@@ -3229,7 +3229,7 @@ snapshots:
       '@types/yargs': 17.0.35
       chalk: 4.1.2
 
-  '@jimmycai/jsoniq-language-server@0.1.0-dev.47aabd9':
+  '@jimmycai/jsoniq-language-server@0.1.0-dev.4e376d6':
     dependencies:
       antlr-ng: 1.0.10
       antlr4-c3: 3.4.4
