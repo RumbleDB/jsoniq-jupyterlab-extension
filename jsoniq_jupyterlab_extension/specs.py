@@ -3,7 +3,7 @@ from jupyter_lsp.specs.utils import NodeModuleSpec
 
 class JSONIQLanguageServer(NodeModuleSpec):
     node_module = key = "@jimmycai/jsoniq-language-server"
-    script = ["dist", "server", "main.js"]
+    script = ["dist", "main.js"]
     languages = ["jsoniq"]
     args = ["--stdio"]
     spec = dict(
