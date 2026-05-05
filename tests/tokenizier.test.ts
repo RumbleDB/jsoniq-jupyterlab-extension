@@ -1,4 +1,4 @@
-import { describe, test, expect } from "@jest/globals";
+import { describe, test, expect } from "vitest";
 import { TokenToCodeMirrorStyleConverter } from "../src/code-mirror/tokenizer";
 import { jsoniqLexer } from "../src/grammar/jsoniqLexer";
 import { StringStream } from "@codemirror/language";
