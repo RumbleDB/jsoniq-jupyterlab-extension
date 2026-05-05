@@ -1,4 +1,4 @@
-name: Run Jest Tests
+name: Run Tests
 
 on:
     push:
@@ -46,5 +46,5 @@ jobs:
             - name: Build
               run: uv run pnpm run build:prod # Because we need to use jupyter, which is a Python package
 
-            - name: Run Jest tests
+            - name: Run tests
               run: pnpm run test
