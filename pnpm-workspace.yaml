@@ -1,3 +1,0 @@
-allowBuilds:
-  '@fortawesome/fontawesome-free': false
-  unrs-resolver: false
