@@ -33,7 +33,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
             displayName: JSONIQ_LANGUAGE_DISPLAY_NAME,
             contentType: "code",
             fileFormat: "text",
-            extensions: [JSONIQ_EXTENSION],
+            extensions: [`.${JSONIQ_EXTENSION}`],
             mimeTypes: [JSONIQ_MIME_TYPE],
             icon: jsoniqIcon,
         });
@@ -41,8 +41,8 @@ const plugin: JupyterFrontEndPlugin<void> = {
         extensions.addExtension({
             name: JUPYTER_PLUGIN_ID,
             default: 1,
-            factory: () =>
-                EditorExtensionRegistry.createConfigurableExtension(() => languageSelection())
+            factory: options =>
+                EditorExtensionRegistry.createConfigurableExtension(() => languageSelection(options.model))
         })
     },
     autoStart: true,
