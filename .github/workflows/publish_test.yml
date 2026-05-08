@@ -86,7 +86,8 @@ jobs:
                   sdist_language_server = sorted(
                       name
                       for name in sdist_names
-                      if "jsoniq-language-server" in name
+                      if "bundled_language_server" in name
+                      or "jsoniq-language-server" in name
                       or "language_server" in name
                   )
 
