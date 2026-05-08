@@ -33,14 +33,6 @@ jobs:
               with:
                   enable-cache: true
 
-            - name: Set up Python
-              run: uv python install
-
-            - name: Install Python dependencies
-              run: uv sync --locked --all-extras --dev
-              env:
-                  HATCH_BUILD_HOOKS_ENABLE: "false"
-
             - name: Build distribution package
               run: uv build -o dist/whl
 
