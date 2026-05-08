@@ -52,9 +52,11 @@
         packages  = ["jsoniq_jupyterlab_extension"]
 
         [tool.hatch.build.targets.wheel.shared-data]
-            "dist/labextension"                             = "share/jupyter/labextensions/jsoniq-jupyterlab-extension"
-            "dist/labextension/install.json"                = "share/jupyter/labextensions/jsoniq-jupyterlab-extension/install.json"
-            "node_modules/@jimmycai/jsoniq-language-server" = "share/jsoniq-jupyterlab-extension/language_server"
+            "dist/labextension"                                                   = "share/jupyter/labextensions/jsoniq-jupyterlab-extension"
+            "dist/labextension/install.json"                                      = "share/jupyter/labextensions/jsoniq-jupyterlab-extension/install.json"
+            "node_modules/@jimmycai/jsoniq-language-server/assets"                = "share/jsoniq-jupyterlab-extension/language_server/assets"
+            "node_modules/@jimmycai/jsoniq-language-server/dist"                  = "share/jsoniq-jupyterlab-extension/language_server/dist"
+            "node_modules/@jimmycai/jsoniq-language-server/package.json"          = "share/jsoniq-jupyterlab-extension/language_server/package.json"
 
     [tool.hatch.build.targets.sdist]
         exclude = [".github"]
