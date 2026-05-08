@@ -230,3 +230,5 @@ jsoniq_jupyter_lsp.egg-info
 .yarn
 tsconfig.tsbuildinfo
 .DS_Store
+
+.pnpm-store
