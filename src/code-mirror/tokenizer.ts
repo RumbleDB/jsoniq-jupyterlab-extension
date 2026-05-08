@@ -1,8 +1,9 @@
-import { CharStream, CommonTokenStream, CommonToken } from "antlr4ng";
 import { StreamLanguage, StringStream } from "@codemirror/language";
+import { tags } from "@lezer/highlight";
+import { CharStream, CommonTokenStream, CommonToken } from "antlr4ng";
+
 import { jsoniqLexer } from "../grammar/jsoniqLexer.js";
 import { TOKEN_TYPE_TO_TAG } from "./tokenSets.js";
-import { tags } from "@lezer/highlight";
 
 /**
  * Token type ID from the JSONiq ANTLR lexer.

@@ -1,5 +1,5 @@
-import { ILSPCodeExtractorsManager } from "@jupyterlab/lsp";
 import { RegExpForeignCodeExtractor } from "@jupyter-lsp/jupyterlab-lsp";
+import { ILSPCodeExtractorsManager } from "@jupyterlab/lsp";
 
 export function registerJSONiqMagicLSP(lspCodeExtractorsManager: ILSPCodeExtractorsManager | null) {
     if (lspCodeExtractorsManager !== null) {

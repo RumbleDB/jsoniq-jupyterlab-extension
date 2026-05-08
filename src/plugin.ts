@@ -1,7 +1,10 @@
 import { JupyterFrontEnd, JupyterFrontEndPlugin } from "@jupyterlab/application";
 import { IEditorLanguageRegistry } from "@jupyterlab/codemirror";
+import { EditorExtensionRegistry, IEditorExtensionRegistry } from "@jupyterlab/codemirror";
+import { ILSPCodeExtractorsManager } from "@jupyterlab/lsp";
+
+import { languageSelection } from "./code-mirror/highlight.js";
 import { registerJSONiqLanguage } from "./code-mirror/register-language.js";
-import { jsoniqIcon } from "./icon.js";
 import {
     JSONIQ_EXTENSION,
     JSONIQ_LANGUAGE,
@@ -9,9 +12,7 @@ import {
     JSONIQ_MIME_TYPE,
     JUPYTER_PLUGIN_ID,
 } from "./const.js";
-import { EditorExtensionRegistry, IEditorExtensionRegistry } from "@jupyterlab/codemirror";
-import { ILSPCodeExtractorsManager } from "@jupyterlab/lsp";
-import { languageSelection } from "./code-mirror/highlight.js";
+import { jsoniqIcon } from "./icon.js";
 import { registerJSONiqMagicLSP } from "./lsp/register.js";
 
 const plugin: JupyterFrontEndPlugin<void> = {

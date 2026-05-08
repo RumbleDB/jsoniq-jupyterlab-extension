@@ -1,4 +1,5 @@
 import { tags, Tag } from "@lezer/highlight";
+
 import { jsoniqLexer } from "../grammar/jsoniqLexer.js";
 
 const KEYWORD_TOKENS: number[] = [

@@ -1,6 +1,7 @@
 import { Compartment, EditorState, Extension, Prec } from "@codemirror/state";
-import { jsoniq } from "./language";
+
 import { JSONIQ_MAGIC_COMMAND, JSONIQ_MIME_TYPE } from "../const";
+import { jsoniq } from "./language";
 
 type EditorModel = {
     mimeType: string;

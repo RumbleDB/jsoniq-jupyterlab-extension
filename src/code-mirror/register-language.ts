@@ -1,11 +1,12 @@
-import { jsoniq } from "./language";
 import { IEditorLanguageRegistry } from "@jupyterlab/codemirror";
+
 import {
     JSONIQ_LANGUAGE,
     JSONIQ_LANGUAGE_DISPLAY_NAME,
     JSONIQ_MIME_TYPE,
     JSONIQ_EXTENSION,
 } from "../const.js";
+import { jsoniq } from "./language";
 
 export function registerJSONiqLanguage(languageRegistry: IEditorLanguageRegistry) {
     languageRegistry.addLanguage({

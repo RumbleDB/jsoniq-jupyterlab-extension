@@ -1,8 +1,9 @@
-import { describe, test, expect } from "vitest";
-import { TokenToCodeMirrorStyleConverter } from "../src/code-mirror/tokenizer";
-import { jsoniqLexer } from "../src/grammar/jsoniqLexer";
 import { StringStream } from "@codemirror/language";
+import { describe, test, expect } from "vitest";
+
+import { TokenToCodeMirrorStyleConverter } from "../src/code-mirror/tokenizer";
 import type { TokenizerState } from "../src/code-mirror/tokenizer";
+import { jsoniqLexer } from "../src/grammar/jsoniqLexer";
 
 function createCurrentToken(text: string, type: number, startIndex: number, stopIndex?: number) {
     return {
