@@ -17,7 +17,11 @@
         "watch:labextension": "jupyter labextension watch .",
         "link": "jupyter labextension link .",
         "antlr4": "antlr-ng -Dlanguage=TypeScript ./src/grammar/jsoniq.g4",
-        "test": "vitest run tests"
+        "test": "vitest run tests",
+        "fmt": "oxfmt",
+        "fmt:check": "oxfmt --check",
+        "lint": "oxlint",
+        "lint:fix": "oxlint --fix"
     },
     "repository": {
         "type": "git",
@@ -49,6 +53,8 @@
         "@jupyterlab/builder": "^4.5.7",
         "@types/node": "^25.6.0",
         "npm-run-all2": "^8.0.4",
+        "oxfmt": "^0.48.0",
+        "oxlint": "^1.63.0",
         "shx": "^0.4.0",
         "typescript": "^6.0.3",
         "vitest": "^4.1.5"
