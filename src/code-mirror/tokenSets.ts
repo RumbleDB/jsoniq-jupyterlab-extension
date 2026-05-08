@@ -92,20 +92,11 @@ const NUMBER_TOKENS: number[] = [
     jsoniqLexer.DecimalLiteral,
 ];
 
-const SQUARE_BRACKET_TOKENS: number[] = [
-    jsoniqLexer.Klbracket,
-    jsoniqLexer.Krbracket,
-];
+const SQUARE_BRACKET_TOKENS: number[] = [jsoniqLexer.Klbracket, jsoniqLexer.Krbracket];
 
-const BRACE_TOKENS: number[] = [
-    jsoniqLexer.Klbrace,
-    jsoniqLexer.Krbrace,
-];
+const BRACE_TOKENS: number[] = [jsoniqLexer.Klbrace, jsoniqLexer.Krbrace];
 
-const PAREN_TOKENS: number[] = [
-    jsoniqLexer.Klparen,
-    jsoniqLexer.Krparen,
-];
+const PAREN_TOKENS: number[] = [jsoniqLexer.Klparen, jsoniqLexer.Krparen];
 
 const OPERATOR_TOKENS: number[] = [
     jsoniqLexer.Kplus,
@@ -116,15 +107,9 @@ const OPERATOR_TOKENS: number[] = [
     jsoniqLexer.Kassign,
 ];
 
-const SEPARATOR_TOKENS: number[] = [
-    jsoniqLexer.Kcomma,
-    jsoniqLexer.Ksemicolon,
-];
+const SEPARATOR_TOKENS: number[] = [jsoniqLexer.Kcomma, jsoniqLexer.Ksemicolon];
 
-const NAMESPACE_TOKENS: number[] = [
-    jsoniqLexer.Knamespace,
-    jsoniqLexer.Kexternal,
-];
+const NAMESPACE_TOKENS: number[] = [jsoniqLexer.Knamespace, jsoniqLexer.Kexternal];
 
 /// Mapping from token types to CodeMirror styles
 const BATCH_TOKENS_TO_STYLE = new Map<Array<number>, Tag>([

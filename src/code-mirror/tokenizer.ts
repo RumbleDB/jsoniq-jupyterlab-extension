@@ -1,9 +1,7 @@
 import { CharStream, CommonTokenStream, CommonToken } from "antlr4ng";
 import { StreamLanguage, StringStream } from "@codemirror/language";
 import { jsoniqLexer } from "../grammar/jsoniqLexer.js";
-import {
-    TOKEN_TYPE_TO_TAG
-} from "./tokenSets.js";
+import { TOKEN_TYPE_TO_TAG } from "./tokenSets.js";
 import { tags } from "@lezer/highlight";
 
 /**
@@ -22,7 +20,7 @@ interface Token {
 
 export interface TokenizerState {
     /// Cache the current line and its tokens
-    /// Because CodeMirror may call the tokenizer multiple times for the same line, 
+    /// Because CodeMirror may call the tokenizer multiple times for the same line,
     ///     and we want to avoid re-tokenizing.
     cachedLineText: string;
     cachedTokens: Token[];
@@ -79,11 +77,7 @@ export class TokenToCodeMirrorStyleConverter {
     }
 
     public convertTokenToCodeMirrorStyle(): string | null {
-        if (
-            this.state.nextTokenStyle &&
-            this.currToken &&
-            this.stream.match(this.currToken.text)
-        ) {
+        if (this.state.nextTokenStyle && this.currToken && this.stream.match(this.currToken.text)) {
             const style = this.state.nextTokenStyle;
             this.state.nextTokenStyle = null; // clear for next call
             return style.toString();
@@ -142,11 +136,7 @@ export const jsoniqLanguageDefinition = StreamLanguage.define({
         state.currentTokenIndex = currentTokenIndex;
 
         const currToken = cachedTokens[currentTokenIndex];
-        const tokenConverter = new TokenToCodeMirrorStyleConverter(
-            currToken,
-            stream,
-            state
-        );
+        const tokenConverter = new TokenToCodeMirrorStyleConverter(currToken, stream, state);
         const style = tokenConverter.convertTokenToCodeMirrorStyle();
 
         /// The current token has been fully consumed, move to the next token for the next call

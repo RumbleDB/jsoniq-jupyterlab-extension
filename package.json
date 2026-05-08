@@ -2,7 +2,23 @@
     "name": "jsoniq-jupyterlab-extension",
     "version": "2.0.0-a5",
     "description": "JupyterLab extension to support JSONiq magic within python cells. This extension is required to get the JSONiq LSP functionality.",
-    "packageManager": "pnpm@11.0.5",
+    "keywords": [
+        "jsoniq"
+    ],
+    "homepage": "https://github.com/RumbleDB/jsoniq-jupyterlab-extension#readme",
+    "bugs": {
+        "url": "https://github.com/RumbleDB/jsoniq-jupyterlab-extension/issues"
+    },
+    "license": "Apache-2.0",
+    "author": "JSONiq Development Team",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/RumbleDB/jsoniq-jupyterlab-extension.git"
+    },
+    "files": [
+        "dist/lib/",
+        "dist/labextension/"
+    ],
     "main": "dist/lib/plugin.js",
     "scripts": {
         "build:lib": "tsc --sourceMap",
@@ -23,19 +39,6 @@
         "lint": "oxlint",
         "lint:fix": "oxlint --fix"
     },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/RumbleDB/jsoniq-jupyterlab-extension.git"
-    },
-    "keywords": [
-        "jsoniq"
-    ],
-    "author": "JSONiq Development Team",
-    "license": "Apache-2.0",
-    "bugs": {
-        "url": "https://github.com/RumbleDB/jsoniq-jupyterlab-extension/issues"
-    },
-    "homepage": "https://github.com/RumbleDB/jsoniq-jupyterlab-extension#readme",
     "dependencies": {
         "@codemirror/language": "^6.12.3",
         "@codemirror/state": "^6.6.0",
@@ -59,10 +62,7 @@
         "typescript": "^6.0.3",
         "vitest": "^4.1.5"
     },
-    "files": [
-        "dist/lib/",
-        "dist/labextension/"
-    ],
+    "packageManager": "pnpm@11.0.5",
     "jupyterlab": {
         "extension": true,
         "outputDir": "dist/labextension"

@@ -4,12 +4,7 @@ import { jsoniqLexer } from "../src/grammar/jsoniqLexer";
 import { StringStream } from "@codemirror/language";
 import type { TokenizerState } from "../src/code-mirror/tokenizer";
 
-function createCurrentToken(
-    text: string,
-    type: number,
-    startIndex: number,
-    stopIndex?: number
-) {
+function createCurrentToken(text: string, type: number, startIndex: number, stopIndex?: number) {
     return {
         tokenName: "test",
         text,
@@ -58,22 +53,15 @@ function getTokensForText(textLine: string) {
     textLine.split(" ").forEach((word) => {
         if (word.length > 0 && word[0] === "$") {
             // variable
-            tokens.push(
-                createCurrentToken(
-                    "$",
-                    getJSONiqLexerType("$"),
-                    currIndex,
-                    currIndex + 1
-                )
-            );
+            tokens.push(createCurrentToken("$", getJSONiqLexerType("$"), currIndex, currIndex + 1));
             currIndex++;
             tokens.push(
                 createCurrentToken(
                     word.substring(1),
                     getJSONiqLexerType(word.substring(1)),
                     currIndex,
-                    currIndex + 1
-                )
+                    currIndex + 1,
+                ),
             );
         } else {
             tokens.push(
@@ -81,8 +69,8 @@ function getTokensForText(textLine: string) {
                     word,
                     getJSONiqLexerType(word),
                     currIndex,
-                    currIndex + word.length
-                )
+                    currIndex + word.length,
+                ),
             );
         }
         currIndex += word.length + 1; // +1 for whitespace
@@ -98,24 +86,19 @@ describe("tokenizer module single tokens", () => {
         const testConverter = new TokenToCodeMirrorStyleConverter(
             testTokenState,
             testStringStream,
-            testState
+            testState,
         );
         expect(testConverter.convertTokenToCodeMirrorStyle()).toBe("keyword");
     });
 
     test("checks if keyword 'function' is correctly identified", () => {
-        const testTokenState = createCurrentToken(
-            "function",
-            jsoniqLexer.Kfunction,
-            0,
-            7
-        );
+        const testTokenState = createCurrentToken("function", jsoniqLexer.Kfunction, 0, 7);
         const testState = createState(null);
         const testStringStream = new StringStream("function", 0, 0);
         const testConverter = new TokenToCodeMirrorStyleConverter(
             testTokenState,
             testStringStream,
-            testState
+            testState,
         );
         expect(testConverter.convertTokenToCodeMirrorStyle()).toBe("keyword");
     });
@@ -127,71 +110,55 @@ describe("tokenizer module single tokens", () => {
         const testConverter = new TokenToCodeMirrorStyleConverter(
             testTokenState,
             testStringStream,
-            testState
+            testState,
         );
         expect(testConverter.convertTokenToCodeMirrorStyle()).toBe("variableName");
     });
 
     test("checks if comments are correctly identified", () => {
-        const testTokenState = createCurrentToken(
-            "(: simple comment :)",
-            jsoniqLexer.XQComment,
-            0
-        );
+        const testTokenState = createCurrentToken("(: simple comment :)", jsoniqLexer.XQComment, 0);
         const testState = createState(null);
         const testStringStream = new StringStream("(: simple comment :)", 0, 0);
         const testConverter = new TokenToCodeMirrorStyleConverter(
             testTokenState,
             testStringStream,
-            testState
+            testState,
         );
         expect(testConverter.convertTokenToCodeMirrorStyle()).toBe("comment");
     });
 
     test("checks if a string is correctly identified", () => {
-        const testTokenState = createCurrentToken(
-            `"some string"`,
-            jsoniqLexer.STRING,
-            0
-        );
+        const testTokenState = createCurrentToken(`"some string"`, jsoniqLexer.STRING, 0);
         const testState = createState(null);
         const testStringStream = new StringStream(`"some string"`, 0, 0);
         const testConverter = new TokenToCodeMirrorStyleConverter(
             testTokenState,
             testStringStream,
-            testState
+            testState,
         );
         expect(testConverter.convertTokenToCodeMirrorStyle()).toBe("string");
     });
 
     test("checks if a number is correctly identified", () => {
-        const testTokenState = createCurrentToken(
-            "341",
-            jsoniqLexer.NumericLiteral,
-            0
-        );
+        const testTokenState = createCurrentToken("341", jsoniqLexer.NumericLiteral, 0);
         const testState = createState(null);
         const testStringStream = new StringStream("341", 0, 0);
         const testConverter = new TokenToCodeMirrorStyleConverter(
             testTokenState,
             testStringStream,
-            testState
+            testState,
         );
         expect(testConverter.convertTokenToCodeMirrorStyle()).toBe("number");
     });
 
     test("checks if a double is correctly identified", () => {
-        const testTokenState = createCurrentToken(
-            "341.34",
-            jsoniqLexer.DoubleLiteral,
-            0
-        );
+        const testTokenState = createCurrentToken("341.34", jsoniqLexer.DoubleLiteral, 0);
         const testState = createState(null);
         const testStringStream = new StringStream("341.34", 0, 0);
         const testConverter = new TokenToCodeMirrorStyleConverter(
             testTokenState,
             testStringStream,
-            testState
+            testState,
         );
         expect(testConverter.convertTokenToCodeMirrorStyle()).toBe("number");
     });
@@ -203,7 +170,7 @@ describe("tokenizer module single tokens", () => {
         const testConverter = new TokenToCodeMirrorStyleConverter(
             testTokenState,
             testStringStream,
-            testState
+            testState,
         );
         expect(testConverter.convertTokenToCodeMirrorStyle()).toBe("squareBracket");
     });
@@ -215,7 +182,7 @@ describe("tokenizer module single tokens", () => {
         const testConverter = new TokenToCodeMirrorStyleConverter(
             testTokenState,
             testStringStream,
-            testState
+            testState,
         );
         expect(testConverter.convertTokenToCodeMirrorStyle()).toBe("brace");
     });
@@ -227,7 +194,7 @@ describe("tokenizer module single tokens", () => {
         const testConverter = new TokenToCodeMirrorStyleConverter(
             testTokenState,
             testStringStream,
-            testState
+            testState,
         );
         expect(testConverter.convertTokenToCodeMirrorStyle()).toBe("paren");
     });
@@ -239,7 +206,7 @@ describe("tokenizer module single tokens", () => {
         const testConverter = new TokenToCodeMirrorStyleConverter(
             testTokenState,
             testStringStream,
-            testState
+            testState,
         );
         expect(testConverter.convertTokenToCodeMirrorStyle()).toBe("operator");
     });
@@ -250,7 +217,7 @@ describe("tokenizer module single tokens", () => {
         const testConverter = new TokenToCodeMirrorStyleConverter(
             testTokenState,
             testStringStream,
-            testState
+            testState,
         );
         expect(testConverter.convertTokenToCodeMirrorStyle()).toBe("operator");
     });
@@ -262,7 +229,7 @@ describe("tokenizer module single tokens", () => {
         const testConverter = new TokenToCodeMirrorStyleConverter(
             testTokenState,
             testStringStream,
-            testState
+            testState,
         );
         expect(testConverter.convertTokenToCodeMirrorStyle()).toBe("operator");
     });
@@ -274,7 +241,7 @@ describe("tokenizer module single tokens", () => {
         const testConverter = new TokenToCodeMirrorStyleConverter(
             testTokenState,
             testStringStream,
-            testState
+            testState,
         );
         expect(testConverter.convertTokenToCodeMirrorStyle()).toBe("operator");
     });
@@ -286,7 +253,7 @@ describe("tokenizer module single tokens", () => {
         const testConverter = new TokenToCodeMirrorStyleConverter(
             testTokenState,
             testStringStream,
-            testState
+            testState,
         );
         expect(testConverter.convertTokenToCodeMirrorStyle()).toBe("operator");
     });
@@ -298,23 +265,19 @@ describe("tokenizer module single tokens", () => {
         const testConverter = new TokenToCodeMirrorStyleConverter(
             testTokenState,
             testStringStream,
-            testState
+            testState,
         );
         expect(testConverter.convertTokenToCodeMirrorStyle()).toBe("operator");
     });
 
     test("checks if a 'namespace' is correctly identified", () => {
-        const testTokenState = createCurrentToken(
-            "namespace",
-            jsoniqLexer.Knamespace,
-            0
-        );
+        const testTokenState = createCurrentToken("namespace", jsoniqLexer.Knamespace, 0);
         const testState = createState(null);
         const testStringStream = new StringStream("namespace", 0, 0);
         const testConverter = new TokenToCodeMirrorStyleConverter(
             testTokenState,
             testStringStream,
-            testState
+            testState,
         );
         expect(testConverter.convertTokenToCodeMirrorStyle()).toBe("namespace");
     });
@@ -326,7 +289,7 @@ describe("tokenizer module single tokens", () => {
         const testConverter = new TokenToCodeMirrorStyleConverter(
             testTokenState,
             testStringStream,
-            testState
+            testState,
         );
         expect(testConverter.convertTokenToCodeMirrorStyle()).toBe("moduleKeyword");
     });
@@ -338,7 +301,7 @@ describe("tokenizer module single tokens", () => {
         const testConverter = new TokenToCodeMirrorStyleConverter(
             testTokenState,
             testStringStream,
-            testState
+            testState,
         );
         expect(testConverter.convertTokenToCodeMirrorStyle()).toBe("annotation");
     });
@@ -366,7 +329,7 @@ describe("tokenizer module multiple tokens", () => {
             const testConverter = new TokenToCodeMirrorStyleConverter(
                 token,
                 testStringStream,
-                testState
+                testState,
             );
             const converterResult = testConverter.convertTokenToCodeMirrorStyle();
             if (converterResult == null) {
@@ -396,7 +359,7 @@ describe("tokenizer module multiple tokens and state", () => {
             const testConverter = new TokenToCodeMirrorStyleConverter(
                 token,
                 testStringStream,
-                transitionState
+                transitionState,
             );
             const converterResult = testConverter.convertTokenToCodeMirrorStyle();
             if (converterResult == null) {

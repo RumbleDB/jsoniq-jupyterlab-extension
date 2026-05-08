@@ -44,37 +44,37 @@ To contribute to the development of `jsoniq-jupyterlab`, follow these steps:
 
 1. Clone the repository:
 
-   ```sh
-   git clone https://github.com/davidbuzatu-marian/jsoniq-jupyterlab.git
-   cd jsoniq-jupyterlab
-   ```
+    ```sh
+    git clone https://github.com/davidbuzatu-marian/jsoniq-jupyterlab.git
+    cd jsoniq-jupyterlab
+    ```
 
 2. Install dependencies:
 
-   ```sh
-   pnpm install         # Install JavaScript dependencies
-   pnpm run antlr4      # Generate parser from grammar
-   uv python install    # Setup Python environment using uv
-   uv sync              # Sync dependencies for Python environment
-   ```
+    ```sh
+    pnpm install         # Install JavaScript dependencies
+    pnpm run antlr4      # Generate parser from grammar
+    uv python install    # Setup Python environment using uv
+    uv sync              # Sync dependencies for Python environment
+    ```
 
 3. Build the extension:
 
-   ```sh
-   uv run pnpm run build:prod
-   ```
+    ```sh
+    uv run pnpm run build:prod
+    ```
 
 4. Link the extension for local development:
 
-   ```sh
-   jupyter labextension link .
-   ```
+    ```sh
+    jupyter labextension link .
+    ```
 
 5. Launch JupyterLab:
 
-   ```sh
-   jupyter lab
-   ```
+    ```sh
+    jupyter lab
+    ```
 
 ## Building and testing the extension
 

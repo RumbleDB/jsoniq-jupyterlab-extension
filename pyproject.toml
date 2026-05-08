@@ -1,6 +1,12 @@
 #:tombi schema.strict = false
 [build-system]
-requires = ["hatchling>=1.5.0", "hatch-jupyter-builder>=0.5.0", "hatch-nodejs-version", "jupyterlab>=4.0.0,<5", "setuptools"]
+requires = [
+    "hatchling>=1.5.0",
+    "hatch-jupyter-builder>=0.5.0",
+    "hatch-nodejs-version",
+    "jupyterlab>=4.0.0,<5",
+    "setuptools",
+]
 build-backend = "hatchling.build"
 
 [project]
@@ -9,11 +15,7 @@ dynamic = ["version", "description", "authors", "keywords"]
 readme = "README.md"
 license = "Apache-2.0"
 requires-python = ">=3.11"
-dependencies = [
-    "jupyter-lsp>=2.3.1",
-    "jupyterlab>=4.0.0,<5",
-    "jupyterlab-lsp>=5.3.0",
-]
+dependencies = ["jupyter-lsp>=2.3.1", "jupyterlab>=4.0.0,<5", "jupyterlab-lsp>=5.3.0"]
 
 [project.urls]
 Homepage = "https://github.com/RumbleDB/jsoniq-jupyterlab-extension"
@@ -40,16 +42,12 @@ packages = ["jsoniq_jupyterlab_extension"]
 jsoniq-language-server = "jsoniq_jupyterlab_extension.specs:jsoniq_language_server"
 
 [tool.hatch.build.targets.sdist]
-exclude = [
-    ".github",
-]
+exclude = [".github"]
 
 [tool.hatch.build.hooks.jupyter-builder]
 dependencies = ["hatch-jupyter-builder>=0.5.0"]
 build-function = "hatch_jupyter_builder.npm_builder"
-ensured-targets = [
-    "dist/labextension/package.json",
-]
+ensured-targets = ["dist/labextension/package.json"]
 skip-if-exists = ["dist/labextension/package.json"]
 
 [tool.hatch.build.hooks.jupyter-builder.build-kwargs]
