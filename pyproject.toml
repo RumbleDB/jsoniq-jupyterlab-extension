@@ -45,18 +45,16 @@
     [tool.hatch.build.targets.wheel]
         artifacts = [
             "dist/labextension/**",
-            "node_modules/@jimmycai/jsoniq-language-server/dist/**",
-            "node_modules/@jimmycai/jsoniq-language-server/package.json",
-            "node_modules/@jimmycai/jsoniq-language-server/assets/**",
+            "dist/language-server/**",
         ]
         packages  = ["jsoniq_jupyterlab_extension"]
 
         [tool.hatch.build.targets.wheel.shared-data]
-            "dist/labextension"                             = "share/jupyter/labextensions/jsoniq-jupyterlab-extension"
-            "dist/labextension/install.json"                = "share/jupyter/labextensions/jsoniq-jupyterlab-extension/install.json"
-            "bundled_language_server/assets"                = "share/jsoniq-jupyterlab-extension/language_server/assets"
-            "bundled_language_server/server"                = "share/jsoniq-jupyterlab-extension/language_server/dist"
-            "bundled_language_server/package.json"          = "share/jsoniq-jupyterlab-extension/language_server/package.json"
+            "dist/labextension"                 = "share/jupyter/labextensions/jsoniq-jupyterlab-extension"
+            "dist/labextension/install.json"    = "share/jupyter/labextensions/jsoniq-jupyterlab-extension/install.json"
+            "dist/language-server/assets"       = "share/jsoniq-jupyterlab-extension/language_server/assets"
+            "dist/language-server/server"       = "share/jsoniq-jupyterlab-extension/language_server/dist"
+            "dist/language-server/package.json" = "share/jsoniq-jupyterlab-extension/language_server/package.json"
 
     [tool.hatch.build.targets.sdist]
         exclude = [".github"]
