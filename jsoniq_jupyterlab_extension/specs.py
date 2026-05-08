@@ -1,17 +1,10 @@
 import pathlib
 import shutil
-import sysconfig
 from pathlib import Path
 
 HERE = Path(__file__).parent.resolve()
 REPO_ROOT = HERE.parent
 LANGUAGE_SERVER_ROOT = HERE / "language_server"
-DATA_LANGUAGE_SERVER_ROOT = (
-    Path(sysconfig.get_path("data"))
-    / "share"
-    / "jsoniq-jupyterlab-extension"
-    / "language_server"
-)
 DEV_LANGUAGE_SERVER_ROOT = (
     REPO_ROOT / "node_modules" / "@jimmycai" / "jsoniq-language-server"
 )
@@ -22,20 +15,21 @@ NODE_LOCATION = (
 NODE = pathlib.Path(NODE_LOCATION) if NODE_LOCATION else None
 
 
+def _language_server_roots():
+    # Prefer the package-bundled server in wheels, then the development
+    # checkout in node_modules.
+    return (
+        LANGUAGE_SERVER_ROOT,
+        DEV_LANGUAGE_SERVER_ROOT,
+    )
+
+
 def _find_language_server_root():
-    bundled_script = LANGUAGE_SERVER_ROOT / "dist" / "bundled" / "main.mjs"
-    if bundled_script.exists():
-        return LANGUAGE_SERVER_ROOT
+    for root in _language_server_roots():
+        if (root / "dist" / "bundled" / "main.mjs").exists():
+            return root
 
-    data_script = DATA_LANGUAGE_SERVER_ROOT / "dist" / "bundled" / "main.mjs"
-    if data_script.exists():
-        return DATA_LANGUAGE_SERVER_ROOT
-
-    dev_script = DEV_LANGUAGE_SERVER_ROOT / "dist" / "bundled" / "main.mjs"
-    if dev_script.exists():
-        return DEV_LANGUAGE_SERVER_ROOT
-
-    return DATA_LANGUAGE_SERVER_ROOT
+    return LANGUAGE_SERVER_ROOT
 
 
 class JSONIQLanguageServer:

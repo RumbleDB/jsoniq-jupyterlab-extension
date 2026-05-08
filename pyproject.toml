@@ -8,7 +8,7 @@
     dependencies    = [
         "jupyter-lsp>=2.3.1",
         "jupyterlab>=4.0.0,<5",
-        "jupyterlab-lsp>=5.3.0"
+        "jupyterlab-lsp>=5.3.0",
     ]
     dynamic         = ["authors", "description", "keywords", "version"]
 
@@ -43,26 +43,17 @@
     artifacts = ["dist/labextension"]
 
     [tool.hatch.build.targets.wheel]
-        artifacts = [
-            "dist/labextension/**",
-            "dist/language-server/**",
-        ]
+        artifacts = ["dist/labextension/**"]
         packages  = ["jsoniq_jupyterlab_extension"]
 
         [tool.hatch.build.targets.wheel.shared-data]
-            "dist/labextension"                 = "share/jupyter/labextensions/jsoniq-jupyterlab-extension"
-            "dist/labextension/install.json"    = "share/jupyter/labextensions/jsoniq-jupyterlab-extension/install.json"
-            "dist/language-server/assets"       = "share/jsoniq-jupyterlab-extension/language_server/assets"
-            "dist/language-server/server"       = "share/jsoniq-jupyterlab-extension/language_server/dist"
-            "dist/language-server/package.json" = "share/jsoniq-jupyterlab-extension/language_server/package.json"
+            "dist/labextension"              = "share/jupyter/labextensions/jsoniq-jupyterlab-extension"
+            "dist/labextension/install.json" = "share/jupyter/labextensions/jsoniq-jupyterlab-extension/install.json"
+
+        [tool.hatch.build.targets.wheel.hooks.custom]
 
     [tool.hatch.build.targets.sdist]
-        exclude = [".github"]
-
-        [tool.hatch.build.targets.sdist.force-include]
-            "node_modules/@jimmycai/jsoniq-language-server/assets"       = "bundled_language_server/assets"
-            "node_modules/@jimmycai/jsoniq-language-server/dist"         = "bundled_language_server/server"
-            "node_modules/@jimmycai/jsoniq-language-server/package.json" = "bundled_language_server/package.json"
+        [tool.hatch.build.targets.sdist.hooks.custom]
 
     [tool.hatch.build.hooks.jupyter-builder]
         dependencies    = ["hatch-jupyter-builder>=0.5.0"]
