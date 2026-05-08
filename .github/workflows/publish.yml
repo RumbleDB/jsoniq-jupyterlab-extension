@@ -48,7 +48,7 @@ jobs:
               uses: actions/upload-artifact@v6
               with:
                   name: python-package-distributions
-                  path: dist/whl/*.whl
+                  path: dist/whl
 
     publish-to-pypi:
         name: >-
