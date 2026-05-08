@@ -41,9 +41,6 @@ jobs:
               env:
                   HATCH_BUILD_HOOKS_ENABLE: "false"
 
-            - name: Build
-              run: uv run pnpm run build:prod # Because we need to use jupyter, which is a Python package
-
             - name: Build distribution package
               run: uv build -o dist/whl
 
