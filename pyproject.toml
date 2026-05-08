@@ -1,61 +1,66 @@
 #:tombi schema.strict = false
-[build-system]
-requires = [
-    "hatchling>=1.5.0",
-    "hatch-jupyter-builder>=0.5.0",
-    "hatch-nodejs-version",
-    "jupyterlab>=4.0.0,<5",
-    "setuptools",
-]
-build-backend = "hatchling.build"
 
 [project]
-name = "jsoniq-jupyterlab-extension"
-dynamic = ["version", "description", "authors", "keywords"]
-readme = "README.md"
-license = "Apache-2.0"
-requires-python = ">=3.11"
-dependencies = ["jupyter-lsp>=2.3.1", "jupyterlab>=4.0.0,<5", "jupyterlab-lsp>=5.3.0"]
+    name            = "jsoniq-jupyterlab-extension"
+    readme          = "README.md"
+    requires-python = ">=3.11"
+    license         = "Apache-2.0"
+    dependencies    = [
+        "jupyter-lsp>=2.3.1",
+        "jupyterlab>=4.0.0,<5",
+        "jupyterlab-lsp>=5.3.0"
+    ]
+    dynamic         = ["authors", "description", "keywords", "version"]
 
-[project.urls]
-Homepage = "https://github.com/RumbleDB/jsoniq-jupyterlab-extension"
-Repository = "https://github.com/RumbleDB/jsoniq-jupyterlab-extension.git"
-Issues = "https://github.com/RumbleDB/jsoniq-jupyterlab-extension/issues"
+    [project.urls]
+        Homepage   = "https://github.com/RumbleDB/jsoniq-jupyterlab-extension"
+        Issues     = "https://github.com/RumbleDB/jsoniq-jupyterlab-extension/issues"
+        Repository = "https://github.com/RumbleDB/jsoniq-jupyterlab-extension.git"
+
+    [project.entry-points.jupyter_lsp_spec_v1]
+        jsoniq-language-server = "jsoniq_jupyterlab_extension.specs:jsoniq_language_server"
+
+[build-system]
+    requires      = [
+        "hatch-jupyter-builder>=0.5.0",
+        "hatch-nodejs-version",
+        "hatchling>=1.5.0",
+        "jupyterlab>=4.0.0,<5",
+        "setuptools",
+    ]
+    build-backend = "hatchling.build"
 
 [tool.hatch.version]
-source = "nodejs"
+    source = "nodejs"
 
 [tool.hatch.metadata.hooks.nodejs]
-fields = ["description", "authors", "keywords"]
+    fields = ["description", "authors", "keywords"]
 
 [tool.hatch.build]
-artifacts = ["dist/labextension"]
+    artifacts = ["dist/labextension"]
 
-[tool.hatch.build.targets.wheel.shared-data]
-"dist/labextension" = "share/jupyter/labextensions/jsoniq-jupyterlab-extension"
-"dist/labextension/install.json" = "share/jupyter/labextensions/jsoniq-jupyterlab-extension/install.json"
+    [tool.hatch.build.targets.wheel]
+        packages = ["jsoniq_jupyterlab_extension"]
 
-[tool.hatch.build.targets.wheel]
-packages = ["jsoniq_jupyterlab_extension"]
+        [tool.hatch.build.targets.wheel.shared-data]
+            "dist/labextension"              = "share/jupyter/labextensions/jsoniq-jupyterlab-extension"
+            "dist/labextension/install.json" = "share/jupyter/labextensions/jsoniq-jupyterlab-extension/install.json"
 
-[project.entry-points.jupyter_lsp_spec_v1]
-jsoniq-language-server = "jsoniq_jupyterlab_extension.specs:jsoniq_language_server"
+    [tool.hatch.build.targets.sdist]
+        exclude = [".github"]
 
-[tool.hatch.build.targets.sdist]
-exclude = [".github"]
+    [tool.hatch.build.hooks.jupyter-builder]
+        dependencies    = ["hatch-jupyter-builder>=0.5.0"]
+        build-function  = "hatch_jupyter_builder.npm_builder"
+        ensured-targets = ["dist/labextension/package.json"]
+        skip-if-exists  = ["dist/labextension/package.json"]
 
-[tool.hatch.build.hooks.jupyter-builder]
-dependencies = ["hatch-jupyter-builder>=0.5.0"]
-build-function = "hatch_jupyter_builder.npm_builder"
-ensured-targets = ["dist/labextension/package.json"]
-skip-if-exists = ["dist/labextension/package.json"]
-
-[tool.hatch.build.hooks.jupyter-builder.build-kwargs]
-npm = ["pnpm"]
-build_cmd = "build:prod"
+        [tool.hatch.build.hooks.jupyter-builder.build-kwargs]
+            npm       = ["pnpm"]
+            build_cmd = "build:prod"
 
 [tool.jupyter-releaser.options]
-version_cmd = "hatch version"
+    version_cmd = "hatch version"
 
 [tool.jupyter-releaser.hooks]
-# hatch-jupyter-builder handles the build
+    # hatch-jupyter-builder handles the build

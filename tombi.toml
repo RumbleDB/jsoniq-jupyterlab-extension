@@ -1,0 +1,5 @@
+format.rules.indent-style                    = "space"
+format.rules.indent-sub-tables               = true
+format.rules.indent-table-key-value-pairs    = true
+format.rules.indent-width                    = 4
+format.rules.key-value-equals-sign-alignment = true
