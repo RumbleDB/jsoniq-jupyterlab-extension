@@ -34,7 +34,7 @@ jobs:
                   enable-cache: true
 
             - name: Build distribution package
-              run: uv build -o dist/whl
+              run: uv build --clear -o dist/whl
 
             - name: Store the distribution packages
               uses: actions/upload-artifact@v6
