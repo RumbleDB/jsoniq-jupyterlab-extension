@@ -20,6 +20,9 @@
     [project.entry-points.jupyter_lsp_spec_v1]
         jsoniq-language-server = "jsoniq_jupyterlab_extension.specs:jsoniq_language_server"
 
+    [project.scripts]
+        jsoniq-ensure-wrapper = "jsoniq_jupyterlab_extension.cli:ensure_wrapper"
+
 [build-system]
     requires      = [
         "hatch-jupyter-builder>=0.5.0",
@@ -42,6 +45,9 @@
     [tool.hatch.build.targets.wheel]
         packages = ["jsoniq_jupyterlab_extension"]
 
+        [tool.hatch.build.targets.wheel.force-include]
+            "node_modules/@jimmycai/jsoniq-language-server" = "jsoniq_jupyterlab_extension/language_server"
+
         [tool.hatch.build.targets.wheel.shared-data]
             "dist/labextension"              = "share/jupyter/labextensions/jsoniq-jupyterlab-extension"
             "dist/labextension/install.json" = "share/jupyter/labextensions/jsoniq-jupyterlab-extension/install.json"
@@ -49,11 +55,20 @@
     [tool.hatch.build.targets.sdist]
         exclude = [".github"]
 
+        [tool.hatch.build.targets.sdist.force-include]
+            "node_modules/@jimmycai/jsoniq-language-server" = "jsoniq_jupyterlab_extension/language_server"
+
     [tool.hatch.build.hooks.jupyter-builder]
         dependencies    = ["hatch-jupyter-builder>=0.5.0"]
         build-function  = "hatch_jupyter_builder.npm_builder"
-        ensured-targets = ["dist/labextension/package.json"]
-        skip-if-exists  = ["dist/labextension/package.json"]
+        ensured-targets = [
+            "dist/labextension/package.json",
+            "node_modules/@jimmycai/jsoniq-language-server/dist/bundled/main.mjs",
+        ]
+        skip-if-exists  = [
+            "dist/labextension/package.json",
+            "node_modules/@jimmycai/jsoniq-language-server/dist/bundled/main.mjs",
+        ]
 
         [tool.hatch.build.hooks.jupyter-builder.build-kwargs]
             npm       = ["pnpm"]

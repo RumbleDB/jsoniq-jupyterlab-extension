@@ -42,7 +42,6 @@
     "dependencies": {
         "@codemirror/language": "^6.12.3",
         "@codemirror/state": "^6.6.0",
-        "@jimmycai/jsoniq-language-server": "0.1.0-dev.6252b31",
         "@jupyter-lsp/jupyterlab-lsp": "^5.3.0",
         "@jupyterlab/application": "^4.5.7",
         "@jupyterlab/codemirror": "^4.5.7",
@@ -53,6 +52,7 @@
         "antlr4ng": "^3.0.16"
     },
     "devDependencies": {
+        "@jimmycai/jsoniq-language-server": "0.1.0-dev.6623786",
         "@jupyterlab/builder": "^4.5.7",
         "@types/node": "^25.6.0",
         "npm-run-all2": "^8.0.4",

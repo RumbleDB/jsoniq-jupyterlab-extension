@@ -9,12 +9,18 @@
 
 ## Installation
 
-Install the extension from Python packaging. No `npm` or `yarn` installation is required for users.
+Install the extension from Python packaging. No manual `npm`, `yarn`, or language-server install is required for users.
 
 To install, run:
 
 ```sh
 pip install jsoniq-jupyterlab-extension
+```
+
+To prefetch or refresh the bundled wrapper after installation, run:
+
+```sh
+jsoniq-ensure-wrapper
 ```
 
 After installing the package, you may need to enable the extension in JupyterLab:
@@ -63,6 +69,8 @@ To contribute to the development of `jsoniq-jupyterlab`, follow these steps:
     ```sh
     uv run pnpm run build:prod
     ```
+
+    Hatch includes the bundled JSONiq language server from `node_modules` in the Python package so the wheel can launch it directly with `node`.
 
 4. Link the extension for local development:
 
