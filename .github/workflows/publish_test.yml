@@ -1,0 +1,144 @@
+name: Debug Python Distribution
+
+on:
+    workflow_dispatch:
+
+jobs:
+    debug-build:
+        name: Debug distribution build
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v6
+              with:
+                  persist-credentials: false
+
+            - name: Show checkout context
+              run: |
+                  git rev-parse HEAD
+                  git status --short
+                  sed -n '42,80p' pyproject.toml
+                  sed -n '1,120p' package.json
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v6
+              with:
+                  node-version: 24
+
+            - name: Set up pnpm
+              uses: pnpm/action-setup@v6
+
+            - name: Install dependencies
+              run: pnpm install
+
+            - name: Inspect language server source package
+              run: |
+                  mkdir -p dist/debug
+                  {
+                      echo "PWD: $PWD"
+                      echo "Node: $(node --version)"
+                      echo "pnpm: $(pnpm --version)"
+                      echo
+                      echo "Package link:"
+                      ls -la node_modules/@jimmycai || true
+                      echo
+                      echo "Language server files:"
+                      find -L node_modules/@jimmycai/jsoniq-language-server -maxdepth 5 -type f | sort
+                  } | tee dist/debug/source-language-server.txt
+
+                  test -f node_modules/@jimmycai/jsoniq-language-server/dist/bundled/main.mjs
+                  test -f node_modules/@jimmycai/jsoniq-language-server/dist/wrapper/executable/ensure-wrapper.mjs
+
+            - name: Build antlr4 grammar
+              run: pnpm run antlr4
+
+            - name: Install uv
+              uses: astral-sh/setup-uv@v7
+              with:
+                  enable-cache: true
+
+            - name: Build distribution package
+              run: uv build --clear -o dist/whl
+
+            - name: Inspect built distributions
+              run: |
+                  python - <<'PY'
+                  import collections
+                  import json
+                  import tarfile
+                  import zipfile
+                  from pathlib import Path
+
+                  debug_dir = Path("dist/debug")
+                  debug_dir.mkdir(parents=True, exist_ok=True)
+
+                  wheel = next(Path("dist/whl").glob("*.whl"))
+                  sdist = next(Path("dist/whl").glob("*.tar.gz"))
+
+                  with zipfile.ZipFile(wheel) as zf:
+                      wheel_names = [info.filename for info in zf.infolist()]
+                  with tarfile.open(sdist) as tf:
+                      sdist_names = tf.getnames()
+
+                  wheel_language_server = sorted(
+                      name for name in wheel_names if "language_server" in name
+                  )
+                  sdist_language_server = sorted(
+                      name
+                      for name in sdist_names
+                      if "jsoniq-language-server" in name
+                      or "language_server" in name
+                  )
+
+                  report = {
+                      "wheel": str(wheel),
+                      "sdist": str(sdist),
+                      "wheel_language_server_entries": wheel_language_server,
+                      "sdist_language_server_entries": sdist_language_server,
+                      "duplicate_wheel_entries": sorted(
+                          name
+                          for name, count in collections.Counter(wheel_names).items()
+                          if count > 1
+                      ),
+                  }
+
+                  (debug_dir / "distribution-report.json").write_text(
+                      json.dumps(report, indent=2) + "\n"
+                  )
+                  (debug_dir / "wheel-language-server.txt").write_text(
+                      "\n".join(wheel_language_server) + "\n"
+                  )
+                  (debug_dir / "sdist-language-server.txt").write_text(
+                      "\n".join(sdist_language_server) + "\n"
+                  )
+
+                  print(json.dumps(report, indent=2))
+
+                  if report["duplicate_wheel_entries"]:
+                      raise SystemExit("Wheel contains duplicate entries")
+
+                  expected = [
+                      "language_server/package.json",
+                      "language_server/assets/wrapper/release-manifest.json",
+                      "language_server/dist/bundled/main.mjs",
+                      "language_server/dist/wrapper/executable/ensure-wrapper.mjs",
+                  ]
+                  missing = [
+                      fragment
+                      for fragment in expected
+                      if not any(fragment in name for name in wheel_names)
+                  ]
+                  if missing:
+                      raise SystemExit(
+                          "Missing expected wheel entries: " + ", ".join(missing)
+                      )
+                  PY
+
+            - name: Upload debug artifacts
+              if: always()
+              uses: actions/upload-artifact@v6
+              with:
+                  name: distribution-debug
+                  path: |
+                      dist/debug
+                      dist/whl
