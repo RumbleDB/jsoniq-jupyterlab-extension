@@ -1,3 +1,4 @@
 allowBuilds:
-    "@fortawesome/fontawesome-free": true
-    unrs-resolver: true
+  "@fortawesome/fontawesome-free": true
+  esbuild: true
+  unrs-resolver: true

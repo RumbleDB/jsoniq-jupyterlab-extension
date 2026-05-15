@@ -14,9 +14,6 @@ importers:
       '@codemirror/state':
         specifier: ^6.6.0
         version: 6.6.0
-      '@jimmycai/jsoniq-language-server':
-        specifier: 0.1.0-dev.6252b31
-        version: 0.1.0-dev.6252b31
       '@jupyter-lsp/jupyterlab-lsp':
         specifier: ^5.3.0
         version: 5.3.0(react@18.3.1)
@@ -41,6 +38,9 @@ importers:
       antlr4ng:
         specifier: ^3.0.16
         version: 3.0.16
+      jsoniq-language-server:
+        specifier: ^2.0.0
+        version: 2.0.0
     devDependencies:
       '@jupyterlab/builder':
         specifier: ^4.5.7
@@ -148,9 +148,6 @@ packages:
   '@fortawesome/fontawesome-free@5.15.4':
     resolution: {integrity: sha512-eYm8vijH/hpzr/6/1CJ/V/Eb1xQFW2nnUKArb3z+yUWv7HTwj6M7SP957oMjfZjAHU6qpoNc2wQvIxBLWYa/Jg==}
     engines: {node: '>=6'}
-
-  '@jimmycai/jsoniq-language-server@0.1.0-dev.6252b31':
-    resolution: {integrity: sha512-dzM2yjMZwPPM5FJwv1quI/FeOx5mOyEu5Mr1rdnXQVKhdIOSUndKnNTjSfe3DWRAXTCFosRxZ9FnxP4hftbupA==}
 
   '@jridgewell/gen-mapping@0.3.13':
     resolution: {integrity: sha512-2kkt/7niJ6MgEPxF0bYdQ6etZaA+fQvDcLKckhy1yIQOzaoKjBBjSj63/aLVjYE3qhRt5dvM+uUyfCg6UKCBbA==}
@@ -1379,6 +1376,9 @@ packages:
   jsonfile@6.2.1:
     resolution: {integrity: sha512-zwOTdL3rFQ/lRdBnntKVOX6k5cKJwEc1HdilT71BWEu7J41gXIB2MRp+vxduPSwZJPWBxEzv4yH1wYLJGUHX4Q==}
 
+  jsoniq-language-server@2.0.0:
+    resolution: {integrity: sha512-/v5cMK453TtpvfalJNgkHKQHVMhCl5Vk4kaygkFwkHV52n2o+rYnEuGasR0fQ95vnCI47d37jwCwIxO7EtNBWA==}
+
   jsonpointer@5.0.1:
     resolution: {integrity: sha512-p/nXbhSEcu3pZRdkW1OfJhpsVtW1gd4Wa1fnQc9YLiTfAjn0312eMKimbdIQzuZl9aa9xUGaRlP9T/CJE/ditQ==}
     engines: {node: '>=0.10.0'}
@@ -2418,14 +2418,6 @@ snapshots:
     optional: true
 
   '@fortawesome/fontawesome-free@5.15.4': {}
-
-  '@jimmycai/jsoniq-language-server@0.1.0-dev.6252b31':
-    dependencies:
-      antlr-ng: 1.0.10
-      antlr4-c3: 3.4.4
-      antlr4ng: 3.0.16
-      vscode-languageserver: 9.0.1
-      vscode-languageserver-textdocument: 1.0.12
 
   '@jridgewell/gen-mapping@0.3.13':
     dependencies:
@@ -3861,6 +3853,14 @@ snapshots:
       universalify: 2.0.1
     optionalDependencies:
       graceful-fs: 4.2.11
+
+  jsoniq-language-server@2.0.0:
+    dependencies:
+      antlr-ng: 1.0.10
+      antlr4-c3: 3.4.4
+      antlr4ng: 3.0.16
+      vscode-languageserver: 9.0.1
+      vscode-languageserver-textdocument: 1.0.12
 
   jsonpointer@5.0.1: {}
 
