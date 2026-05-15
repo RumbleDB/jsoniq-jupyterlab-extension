@@ -2,7 +2,7 @@ from jupyter_lsp.specs.utils import NodeModuleSpec
 
 
 class JSONIQLanguageServer(NodeModuleSpec):
-    node_module = key = "@jimmycai/jsoniq-language-server"
+    node_module = key = "jsoniq-language-server"
     script = ["dist", "main.js"]
     languages = ["jsoniq"]
     args = ["--stdio"]
@@ -10,12 +10,12 @@ class JSONIQLanguageServer(NodeModuleSpec):
         display_name="JSONiq Language Server",
         mime_types=["text/x-jsoniq"],
         urls=dict(
-            home="https://www.npmjs.com/package/@jimmycai/jsoniq-language-server",
+            home="https://www.npmjs.com/package/jsoniq-language-server",
         ),
         install=dict(
-            npm="npm install -g @jimmycai/jsoniq-language-server",
-            yarn="yarn global add @jimmycai/jsoniq-language-server",
-            pnpm="pnpm add -g @jimmycai/jsoniq-language-server",
+            npm="npm install -g jsoniq-language-server",
+            yarn="yarn global add jsoniq-language-server",
+            pnpm="pnpm add -g jsoniq-language-server",
         ),
         env={"JSONIQ_LSP_DEBUG": "1"},
     )
