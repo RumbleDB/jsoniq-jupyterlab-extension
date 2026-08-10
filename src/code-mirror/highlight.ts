@@ -1,6 +1,7 @@
+import { sql } from "@codemirror/lang-sql";
 import { Compartment, EditorState, Extension, Prec } from "@codemirror/state";
 
-import { JSONIQ_MAGIC_COMMAND, JSONIQ_MIME_TYPE } from "../const";
+import { JSONIQ_MAGIC_COMMAND, JSONIQ_MIME_TYPE, SPARKSQL_MAGIC_COMMAND } from "../const";
 import { jsoniq } from "./language";
 
 type EditorModel = {
@@ -23,14 +24,17 @@ function isJSONIQText(text: string, model: EditorModel): boolean {
     );
 }
 
+function isSparkSQLText(text: string): boolean {
+    return text.slice(0, SPARKSQL_MAGIC_COMMAND.length) === SPARKSQL_MAGIC_COMMAND;
+}
+
 export function languageSelection(model: EditorModel): Extension {
     const languageConf = new Compartment();
     const autoLanguage = EditorState.transactionExtender.of((tr) => {
+        const text = tr.newDoc.toString();
         return {
             effects: languageConf.reconfigure(
-                isJSONIQText(tr.newDoc.sliceString(0, JSONIQ_MAGIC_COMMAND.length), model)
-                    ? jsoniq
-                    : [],
+                isJSONIQText(text, model) ? jsoniq : isSparkSQLText(text) ? sql() : [],
             ),
         };
     });
@@ -39,7 +43,15 @@ export function languageSelection(model: EditorModel): Extension {
         // We use high precedence to ensure JSONiq wins over other plugins (like jupysql)
         // when the file type or cell magic explicitly marks the editor as JSONiq.
         // When not JSONiq, we reconfigure to an empty extension [], letting others take over.
-        Prec.highest(languageConf.of(isJSONIQText(model.sharedModel.source, model) ? jsoniq : [])),
+        Prec.highest(
+            languageConf.of(
+                isJSONIQText(model.sharedModel.source, model)
+                    ? jsoniq
+                    : isSparkSQLText(model.sharedModel.source)
+                      ? sql()
+                      : [],
+            ),
+        ),
         autoLanguage,
     ];
 }
