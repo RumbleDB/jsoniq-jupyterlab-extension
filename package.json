@@ -16,6 +16,7 @@
         "url": "git+https://github.com/RumbleDB/jsoniq-jupyterlab-extension.git"
     },
     "files": [
+        "dist/images/",
         "dist/lib/",
         "dist/labextension/"
     ],
