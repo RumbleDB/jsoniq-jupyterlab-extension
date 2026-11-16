@@ -27,7 +27,7 @@ jobs:
             pull-requests: write
         outputs:
             version: ${{ steps.unreleased.outputs.version }}
-            unreleased: ${{ steps.changesets.outputs.hasChangesets == 'false' && steps.unreleased.outputs.unreleased == 'true' }}
+            unreleased: ${{ steps.changesets.outputs['has-changesets'] == 'false' && steps.unreleased.outputs.unreleased == 'true' }}
 
         steps:
             - uses: actions/checkout@v6
@@ -48,11 +48,10 @@ jobs:
               id: changesets
               uses: changesets/action@v2
               with:
-                  version: pnpm release:version
-                  title: "[ci] release"
-                  commit: "[ci] release"
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  version-script: pnpm release:version
+                  pr-title: "[ci] release"
+                  commit-message: "[ci] release"
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Check whether the version is released
               id: unreleased
@@ -159,7 +158,9 @@ jobs:
               run: |
                   # The version's section of the changelog, without its heading.
                   awk -v heading="## $VERSION" '$0 == heading { found = 1; next } /^## / && found { exit } found' CHANGELOG.md > notes.md
-                  gh release create "v$VERSION" dist/* --target "$GITHUB_SHA" --title "v$VERSION" --notes-file notes.md
+                  # A version like 3.1.0-alpha.0, from `changeset pre enter alpha`, is a prerelease.
+                  prerelease=$([[ "$VERSION" == *-* ]] && echo --prerelease || true)
+                  gh release create "v$VERSION" dist/* --target "$GITHUB_SHA" --title "v$VERSION" --notes-file notes.md $prerelease
               env:
                   VERSION: ${{ needs.version.outputs.version }}
                   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
