@@ -5,7 +5,7 @@ import {
     JSONIQ_LANGUAGE_DISPLAY_NAME,
     JSONIQ_MIME_TYPE,
     JSONIQ_EXTENSION,
-} from "../const.js";
+} from "../const";
 import { jsoniq } from "./language";
 
 export function registerJSONiqLanguage(languageRegistry: IEditorLanguageRegistry) {

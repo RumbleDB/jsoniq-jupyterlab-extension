@@ -33,7 +33,7 @@
         "watch:src": "tsc -w --sourceMap",
         "watch:labextension": "jupyter labextension watch .",
         "link": "jupyter labextension link .",
-        "antlr4": "antlr-ng -Dlanguage=TypeScript ./src/grammar/jsoniq.g4",
+        "sync:grammars": "shx cp ../jsoniq-lsp/packages/vscode-extension/syntaxes/jsoniq.tmLanguage.json ../jsoniq-lsp/packages/vscode-extension/syntaxes/xquery.tmLanguage.json src/syntaxes/",
         "test": "vitest run tests",
         "fmt": "oxfmt",
         "fmt:check": "oxfmt --check",
@@ -50,8 +50,8 @@
         "@jupyterlab/lsp": "^4.5.7",
         "@jupyterlab/ui-components": "^4.5.7",
         "@lezer/highlight": "^1.2.3",
-        "antlr-ng": "^1.0.10",
-        "antlr4ng": "^3.0.16",
+        "@shikijs/engine-javascript": "^4.6.0",
+        "@shikijs/vscode-textmate": "^10.1.0",
         "jsoniq-language-server": "^2.8.1"
     },
     "devDependencies": {

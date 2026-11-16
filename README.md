@@ -53,7 +53,6 @@ To contribute to the development of `jsoniq-jupyterlab`, follow these steps:
 
     ```sh
     pnpm install         # Install JavaScript dependencies
-    pnpm run antlr4      # Generate parser from grammar
     uv python install    # Setup Python environment using uv
     uv sync              # Sync dependencies for Python environment
     ```

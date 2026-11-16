@@ -1,154 +1,114 @@
-import { StreamLanguage, StringStream } from "@codemirror/language";
-import { tags } from "@lezer/highlight";
-import { CharStream, CommonTokenStream, CommonToken } from "antlr4ng";
+import { StreamLanguage, type StringStream } from "@codemirror/language";
 
-import { jsoniqLexer } from "../grammar/jsoniqLexer.js";
-import { TOKEN_TYPE_TO_TAG } from "./tokenSets.js";
+import { styleForScopes } from "./scopes";
+import { getGrammar, INITIAL, type GrammarLanguage, type StateStack } from "./textmate";
 
-/**
- * Token type ID from the JSONiq ANTLR lexer.
- * Values correspond to constants like jsoniqLexer.Kdot, jsoniqLexer.STRING, etc.
- */
-type JsoniqTokenType = number;
-
-interface Token {
-    text: string;
-    /** Token type ID from jsoniqLexer (e.g., jsoniqLexer.Kdot, jsoniqLexer.STRING) */
-    type: JsoniqTokenType;
-    startIndex: number;
-    stopIndex: number;
+/** A styled range of one line, in offsets from the start of the line. */
+export interface Span {
+    from: number;
+    to: number;
+    style: string;
 }
 
 export interface TokenizerState {
-    /// Cache the current line and its tokens
-    /// Because CodeMirror may call the tokenizer multiple times for the same line,
-    ///     and we want to avoid re-tokenizing.
-    cachedLineText: string;
-    cachedTokens: Token[];
-
-    /// token() is called sequentially for each token in the line, by keeping track of the current token index, we can find the current token without searching
-    currentTokenIndex: number;
-
-    /// For some tokens (e.g. dot), we want to set the style of the following token based on the current token, this is to keep track of that context.
-    /// For example, after a dot operator, the following token is likely a property name, so we want to style it as such.
-    nextTokenStyle: string | null;
+    /** Chosen at the first line with code, until then `null`. */
+    language: GrammarLanguage | null;
+    /** The TextMate rule stack at the end of the last line; it carries comments and strings across lines. */
+    stack: StateStack;
+    atFirstLine: boolean;
+    /** The spans of the line being read, and the next one to return. */
+    spans: Span[];
+    spanIndex: number;
 }
 
-class Tokenizer {
-    private tokens: Token[];
+/** Like the language server, a module that starts with an XQuery version declaration is XQuery. */
+const XQUERY_VERSION_DECLARATION = /^\s*xquery\s+(?:version|encoding)\b/;
+const CELL_MAGIC = /^%%/;
 
-    constructor(text: string) {
-        this.tokens = this.getTokensForText(text);
-    }
-
-    private getTokensForText(text: string): Token[] {
-        const chars = CharStream.fromString(text);
-        const lexer = new jsoniqLexer(chars);
-        const tokensStream = new CommonTokenStream(lexer);
-        tokensStream.fill();
-        const rawTokens = (tokensStream as unknown as { tokens: CommonToken[] }).tokens;
-        return this.convertCommonTokensToTokens(rawTokens);
-    }
-
-    private convertCommonTokensToTokens(tokens: CommonToken[]): Token[] {
-        return tokens.map((token) => {
-            return {
-                text: token.text || "",
-                type: token.type,
-                startIndex: token.start,
-                stopIndex: token.stop,
-            };
-        });
-    }
-
-    public getTokens(): Token[] {
-        return this.tokens;
-    }
+export function createTokenizerState(): TokenizerState {
+    return { language: null, stack: INITIAL, atFirstLine: true, spans: [], spanIndex: 0 };
 }
 
-export class TokenToCodeMirrorStyleConverter {
-    private currToken: Token | undefined;
-    private stream: StringStream;
-    private state: TokenizerState;
+/** Tokenizes the next line of the document and advances the state to the end of it. */
+export function tokenizeLine(state: TokenizerState, line: string): Span[] {
+    const atFirstLine = state.atFirstLine;
+    state.atFirstLine = false;
 
-    constructor(currToken: Token | undefined, stream: StringStream, state: TokenizerState) {
-        this.currToken = currToken;
-        this.stream = stream;
-        this.state = state;
+    // The `%%jsoniq` line of a notebook cell is IPython syntax, not JSONiq.
+    if (atFirstLine && CELL_MAGIC.test(line)) {
+        return [{ from: 0, to: line.length, style: "meta" }];
     }
 
-    public convertTokenToCodeMirrorStyle(): string | null {
-        if (this.state.nextTokenStyle && this.currToken && this.stream.match(this.currToken.text)) {
-            const style = this.state.nextTokenStyle;
-            this.state.nextTokenStyle = null; // clear for next call
-            return style.toString();
+    if (state.language === null) {
+        if (line.trim() === "") {
+            return [];
         }
-
-        return this.convertCurrentTokenToCodeMirrorStyle();
+        state.language = XQUERY_VERSION_DECLARATION.test(line) ? "xquery" : "jsoniq";
     }
 
-    private convertCurrentTokenToCodeMirrorStyle(): string | null {
-        if (
-            this.currToken &&
-            this.currToken.type !== jsoniqLexer.EOF &&
-            this.stream.match(this.currToken.text)
-        ) {
-            if (this.currToken.type === jsoniqLexer.Kdot) {
-                this.state.nextTokenStyle = tags.propertyName.toString();
-            }
+    const language = state.language;
+    const result = getGrammar(language).tokenizeLine(line, state.stack);
+    state.stack = result.ruleStack;
 
-            const style = TOKEN_TYPE_TO_TAG.get(this.currToken.type);
-            return style?.toString() || tags.variableName.toString();
-        } else {
-            this.stream.next();
-            return null;
+    const spans: Span[] = [];
+    for (const token of result.tokens) {
+        const end = Math.min(token.endIndex, line.length);
+        const text = line.slice(token.startIndex, end);
+        // Whitespace takes only the style of its own scope: the spaces inside `{ $x }` of a
+        // string template are not part of the string.
+        const scopes = text.trim() === "" ? token.scopes.slice(-1) : token.scopes;
+        const style = styleForScopes(scopes, text);
+        if (style !== null) {
+            pushSpan(spans, token.startIndex, end, style);
         }
     }
+    return spans;
 }
 
-export const jsoniqLanguageDefinition = StreamLanguage.define({
-    startState: (_) => {
-        return {
-            cachedLineText: "",
-            cachedTokens: [],
-            currentTokenIndex: 0,
-            nextTokenStyle: null,
-        };
+/** Adds a span, merging it into the previous one when they touch and share a style. */
+function pushSpan(spans: Span[], from: number, to: number, style: string): void {
+    if (to <= from) {
+        return;
+    }
+    const last = spans.at(-1);
+    if (last !== undefined && last.to === from && last.style === style) {
+        last.to = to;
+    } else {
+        spans.push({ from, to, style });
+    }
+}
+
+function readToken(stream: StringStream, state: TokenizerState): string | null {
+    if (stream.sol()) {
+        state.spans = tokenizeLine(state, stream.string);
+        state.spanIndex = 0;
+    }
+
+    const span = state.spans[state.spanIndex];
+    if (span === undefined) {
+        stream.skipToEnd();
+        return null;
+    }
+    if (stream.pos < span.from) {
+        stream.pos = span.from;
+        return null;
+    }
+    stream.pos = span.to;
+    state.spanIndex += 1;
+    return span.style;
+}
+
+/** JSONiq, or XQuery when the module starts with an XQuery version declaration. */
+export const jsoniqLanguageDefinition = StreamLanguage.define<TokenizerState>({
+    name: "jsoniq",
+    startState: () => createTokenizerState(),
+    token: readToken,
+    // Empty lines still advance the rule stack, and end the first line of a cell.
+    blankLine: (state) => {
+        tokenizeLine(state, "");
     },
-    token: (stream, state: TokenizerState) => {
-        if (state.cachedLineText !== stream.string) {
-            const tokenizer = new Tokenizer(stream.string);
-
-            state.cachedLineText = stream.string;
-            state.cachedTokens = tokenizer.getTokens();
-            state.currentTokenIndex = 0;
-            state.nextTokenStyle = null;
-        }
-
-        const cachedTokens = state.cachedTokens;
-        let currentTokenIndex = state.currentTokenIndex;
-
-        while (
-            currentTokenIndex < cachedTokens.length &&
-            cachedTokens[currentTokenIndex].startIndex < stream.pos
-        ) {
-            currentTokenIndex += 1;
-        }
-        state.currentTokenIndex = currentTokenIndex;
-
-        const currToken = cachedTokens[currentTokenIndex];
-        const tokenConverter = new TokenToCodeMirrorStyleConverter(currToken, stream, state);
-        const style = tokenConverter.convertTokenToCodeMirrorStyle();
-
-        /// The current token has been fully consumed, move to the next token for the next call
-        if (
-            currToken &&
-            currToken.type !== jsoniqLexer.EOF &&
-            stream.pos >= currToken.startIndex + currToken.text.length
-        ) {
-            state.currentTokenIndex += 1;
-        }
-
-        return style;
+    languageData: {
+        commentTokens: { block: { open: "(:", close: ":)" } },
+        closeBrackets: { brackets: ["(", "[", "{", '"'] },
     },
 });
