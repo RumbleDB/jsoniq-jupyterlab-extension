@@ -4,3 +4,7 @@ allowBuilds:
     unrs-resolver: true
 patchedDependencies:
     "@codemirror/lsp-client@6.3.0": patches/@codemirror__lsp-client@6.3.0.patch
+
+# Our own language server, which often ships on the day the extension updates to it.
+minimumReleaseAgeExclude:
+    - jsoniq-language-server
