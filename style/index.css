@@ -1,0 +1,20 @@
+/* The language server status in the status bar. */
+.jp-jsoniq-LanguageServerStatus {
+    padding: 0 var(--jp-ui-font-size0, 6px);
+    line-height: 24px;
+    font-size: var(--jp-ui-font-size1);
+    color: var(--jp-ui-font-color1);
+    white-space: nowrap;
+}
+
+.jp-jsoniq-LanguageServerStatus.jp-jsoniq-mod-busy {
+    color: var(--jp-ui-font-color2);
+}
+
+.jp-jsoniq-LanguageServerStatus.jp-jsoniq-mod-warning {
+    color: var(--jp-warn-color0);
+}
+
+.jp-jsoniq-LanguageServerStatus.jp-jsoniq-mod-error {
+    color: var(--jp-error-color0);
+}

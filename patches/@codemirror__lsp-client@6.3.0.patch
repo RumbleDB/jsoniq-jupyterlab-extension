@@ -1,0 +1,66 @@
+diff --git a/dist/index.cjs b/dist/index.cjs
+index 10f8b061f51f3d0ec94f3340b2c8117db10b5f26..d69bafbb6066658ba45b90c3d80c559136f1966c 100644
+--- a/dist/index.cjs
++++ b/dist/index.cjs
+@@ -832,7 +832,12 @@ function mergeCapabilities(base, add) {
+ // one. Remove backslashes before `$}]`, which don't support backslash
+ // escapes in CodeMirror, and expand `$1` to `${1}`.
+ function lspToSnippet(text) {
+-    return text.replace(/\\([$}\\])|\$(\d+)/g, (_m, esc, field) => esc || `\${${field}}`);
++    // In LSP, `$0` is the final cursor position; CodeMirror visits fields in numeric order, so it
++    // must come after every other field instead of first.
++    const last = 1e6;
++    return text
++        .replace(/\\([$}\\])|\$(\d+)/g, (_m, esc, field) => esc || `\${${field === "0" ? last : field}}`)
++        .replace(/\$\{0(?=[:}])/g, `\${${last}`);
+ }
+ /**
+ Register the [language server completion
+@@ -962,8 +967,12 @@ const serverCompletionSource = context => {
+                 let insertTextFormat = (_b = item.insertTextFormat) !== null && _b !== void 0 ? _b : (_c = result.itemDefaults) === null || _c === void 0 ? void 0 : _c.insertTextFormat;
+                 if (item.commitCharacters && item.commitCharacters != defaultCommitChars)
+                     option.commitCharacters = item.commitCharacters;
+-                if (item.detail)
+-                    option.detail = item.detail;
++                // Like VS Code, show the label's details, such as a function's parameters, next to it.
++                let detail = item.labelDetails
++                    ? [item.labelDetails.detail, item.labelDetails.description].filter(Boolean).join(" ")
++                    : item.detail;
++                if (detail)
++                    option.detail = detail;
+                 if (item.sortText)
+                     option.sortText = item.sortText;
+                 if (insertTextFormat == 2 /* Snippet */) {
+diff --git a/dist/index.js b/dist/index.js
+index 37524da19830bfc68ed9a5d53e4ed510149ec730..9ee65e4a9845d01daffa7ebd3372cd090c1838aa 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -830,7 +830,12 @@ function mergeCapabilities(base, add) {
+ // one. Remove backslashes before `$}]`, which don't support backslash
+ // escapes in CodeMirror, and expand `$1` to `${1}`.
+ function lspToSnippet(text) {
+-    return text.replace(/\\([$}\\])|\$(\d+)/g, (_m, esc, field) => esc || `\${${field}}`);
++    // In LSP, `$0` is the final cursor position; CodeMirror visits fields in numeric order, so it
++    // must come after every other field instead of first.
++    const last = 1e6;
++    return text
++        .replace(/\\([$}\\])|\$(\d+)/g, (_m, esc, field) => esc || `\${${field === "0" ? last : field}}`)
++        .replace(/\$\{0(?=[:}])/g, `\${${last}`);
+ }
+ /**
+ Register the [language server completion
+@@ -960,8 +965,12 @@ const serverCompletionSource = context => {
+                 let insertTextFormat = (_b = item.insertTextFormat) !== null && _b !== void 0 ? _b : (_c = result.itemDefaults) === null || _c === void 0 ? void 0 : _c.insertTextFormat;
+                 if (item.commitCharacters && item.commitCharacters != defaultCommitChars)
+                     option.commitCharacters = item.commitCharacters;
+-                if (item.detail)
+-                    option.detail = item.detail;
++                // Like VS Code, show the label's details, such as a function's parameters, next to it.
++                let detail = item.labelDetails
++                    ? [item.labelDetails.detail, item.labelDetails.description].filter(Boolean).join(" ")
++                    : item.detail;
++                if (detail)
++                    option.detail = detail;
+                 if (item.sortText)
+                     option.sortText = item.sortText;
+                 if (insertTextFormat == 2 /* Snippet */) {

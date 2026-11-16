@@ -1,33 +1,53 @@
+import type { EditorView } from "@codemirror/view";
 import { JupyterFrontEnd, JupyterFrontEndPlugin } from "@jupyterlab/application";
-import { IEditorLanguageRegistry } from "@jupyterlab/codemirror";
-import { EditorExtensionRegistry, IEditorExtensionRegistry } from "@jupyterlab/codemirror";
-import { ILSPCodeExtractorsManager } from "@jupyterlab/lsp";
+import type { ICellModel } from "@jupyterlab/cells";
+import {
+    EditorExtensionRegistry,
+    IEditorExtensionRegistry,
+    IEditorLanguageRegistry,
+} from "@jupyterlab/codemirror";
+import { ICompletionProviderManager } from "@jupyterlab/completer";
+import { IEditorTracker } from "@jupyterlab/fileeditor";
+import { INotebookTracker } from "@jupyterlab/notebook";
+import { ISettingRegistry } from "@jupyterlab/settingregistry";
+import { IStatusBar } from "@jupyterlab/statusbar";
 
-import { languageSelection } from "./code-mirror/highlight.js";
-import { registerJSONiqLanguage } from "./code-mirror/register-language.js";
+import { isJSONiq, languageSelection, type EditorModel } from "./code-mirror/highlight";
+import { registerJSONiqLanguage } from "./code-mirror/register-language";
 import {
     JSONIQ_EXTENSION,
     JSONIQ_LANGUAGE,
     JSONIQ_LANGUAGE_DISPLAY_NAME,
     JSONIQ_MIME_TYPE,
     JUPYTER_PLUGIN_ID,
-} from "./const.js";
-import { jsoniqIcon } from "./icon.js";
-import { registerJSONiqMagicLSP } from "./lsp/register.js";
+} from "./const";
+import { jsoniqIcon } from "./icon";
+import { hideJupyterCompletionsInLanguageServerEditors } from "./lsp/completer-guard";
+import { LanguageServerConnection, type LanguageServerSettings } from "./lsp/connection";
+import { languageServerEditor, notebookCellUri } from "./lsp/editor";
+import { addLanguageServerStatus } from "./lsp/status";
 
 const plugin: JupyterFrontEndPlugin<void> = {
     id: JUPYTER_PLUGIN_ID,
     requires: [IEditorLanguageRegistry, IEditorExtensionRegistry],
-    optional: [ILSPCodeExtractorsManager], /// In case jupyterlab-lsp is not installed, the plugin will still work without registering the code extractor
+    optional: [
+        INotebookTracker,
+        IEditorTracker,
+        ICompletionProviderManager,
+        IStatusBar,
+        ISettingRegistry,
+    ],
     activate: (
         app: JupyterFrontEnd,
-        codeMirrorRecognizedLanguages: IEditorLanguageRegistry,
+        languages: IEditorLanguageRegistry,
         extensions: IEditorExtensionRegistry,
-        lspCodeExtractorsManager: ILSPCodeExtractorsManager | null,
+        notebooks: INotebookTracker | null,
+        fileEditors: IEditorTracker | null,
+        completionManager: ICompletionProviderManager | null,
+        statusBar: IStatusBar | null,
+        settingRegistry: ISettingRegistry | null,
     ) => {
-        console.log("JSONiq JupyterLab extension loaded");
-        registerJSONiqLanguage(codeMirrorRecognizedLanguages);
-        registerJSONiqMagicLSP(lspCodeExtractorsManager);
+        registerJSONiqLanguage(languages);
 
         app.docRegistry.addFileType({
             name: JSONIQ_LANGUAGE,
@@ -39,14 +59,56 @@ const plugin: JupyterFrontEndPlugin<void> = {
             icon: jsoniqIcon,
         });
 
+        const settings = settingRegistry
+            ? settingRegistry.load(JUPYTER_PLUGIN_ID).catch((error) => {
+                  console.warn("Couldn't load the JSONiq settings", error);
+                  return null;
+              })
+            : Promise.resolve(null);
+        const read = (loaded: ISettingRegistry.ISettings) =>
+            loaded.composite as unknown as LanguageServerSettings;
+        const connection = new LanguageServerConnection(
+            settings.then((loaded) => loaded && read(loaded)),
+        );
+        // The server reads its settings only when it starts.
+        void settings.then((loaded) =>
+            loaded?.changed.connect(() => connection.restart(read(loaded))),
+        );
+
+        /** The notebook cell or file in the editor, found from where the editor is on the page. */
+        const documentUri = (model: EditorModel, view: EditorView): string | null => {
+            const notebook = notebooks?.find((panel) => panel.node.contains(view.dom));
+            if (notebook) {
+                const cellId = (model as Partial<ICellModel>).id;
+                return cellId
+                    ? notebookCellUri(connection.fileUri(notebook.context.path), cellId)
+                    : null;
+            }
+            const file = fileEditors?.find((widget) => widget.node.contains(view.dom));
+            return file ? connection.fileUri(file.context.path) : null;
+        };
+
         extensions.addExtension({
             name: JUPYTER_PLUGIN_ID,
             default: 1,
             factory: (options) =>
-                EditorExtensionRegistry.createConfigurableExtension(() =>
+                EditorExtensionRegistry.createConfigurableExtension(() => [
                     languageSelection(options.model),
-                ),
+                    languageServerEditor({
+                        connection,
+                        isJSONiq: (view) => isJSONiq(view.state.doc, options.model),
+                        documentUri: (view) => documentUri(options.model, view),
+                    }),
+                ]),
         });
+
+        if (statusBar) {
+            addLanguageServerStatus(statusBar, connection);
+        }
+
+        if (completionManager) {
+            hideJupyterCompletionsInLanguageServerEditors(completionManager);
+        }
     },
     autoStart: true,
 };

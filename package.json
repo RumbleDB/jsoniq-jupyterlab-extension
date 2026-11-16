@@ -15,10 +15,13 @@
         "type": "git",
         "url": "git+https://github.com/RumbleDB/jsoniq-jupyterlab-extension.git"
     },
+    "style": "style/index.css",
     "files": [
         "dist/images/",
         "dist/lib/",
-        "dist/labextension/"
+        "dist/labextension/",
+        "style/",
+        "schema/"
     ],
     "main": "dist/lib/plugin.js",
     "scripts": {
@@ -42,20 +45,32 @@
         "lint:fix": "oxlint --fix"
     },
     "dependencies": {
+        "@codemirror/autocomplete": "^6.20.1",
         "@codemirror/lang-sql": "^6.10.0",
-        "@codemirror/language": "^6.12.3",
-        "@codemirror/state": "^6.6.0",
-        "@jupyter-lsp/jupyterlab-lsp": "^5.3.0",
-        "@jupyterlab/application": "^4.5.7",
-        "@jupyterlab/codemirror": "^4.5.7",
-        "@jupyterlab/lsp": "^4.5.7",
-        "@jupyterlab/ui-components": "^4.5.7",
+        "@codemirror/language": "^6.12.1",
+        "@codemirror/lsp-client": "^6.3.0",
+        "@codemirror/state": "^6.7.6",
+        "@codemirror/view": "^6.43.15",
+        "@jupyterlab/application": "^4.6.6",
+        "@jupyterlab/cells": "^4.6.6",
+        "@jupyterlab/codeeditor": "^4.6.6",
+        "@jupyterlab/codemirror": "^4.6.6",
+        "@jupyterlab/completer": "^4.6.6",
+        "@jupyterlab/coreutils": "^6.6.6",
+        "@jupyterlab/fileeditor": "^4.6.6",
+        "@jupyterlab/notebook": "^4.6.6",
+        "@jupyterlab/services": "^7.6.6",
+        "@jupyterlab/settingregistry": "^4.6.6",
+        "@jupyterlab/statusbar": "^4.6.6",
+        "@jupyterlab/ui-components": "^4.6.6",
         "@lezer/highlight": "^1.2.3",
+        "@lumino/signaling": "^2.1.6",
+        "@lumino/widgets": "^2.10.0",
         "@shikijs/engine-javascript": "^4.6.0",
         "@shikijs/vscode-textmate": "^10.1.0"
     },
     "devDependencies": {
-        "@jupyterlab/builder": "^4.5.7",
+        "@jupyterlab/builder": "^4.5.11",
         "@types/node": "^25.9.2",
         "jsoniq-language-server": "^2.21.0",
         "npm-run-all2": "^8.0.4",
@@ -68,6 +83,7 @@
     "packageManager": "pnpm@11.0.5",
     "jupyterlab": {
         "extension": true,
-        "outputDir": "dist/labextension"
+        "outputDir": "dist/labextension",
+        "schemaDir": "schema"
     }
 }

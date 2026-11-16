@@ -2,3 +2,5 @@ allowBuilds:
     "@fortawesome/fontawesome-free": true
     esbuild: true
     unrs-resolver: true
+patchedDependencies:
+    "@codemirror/lsp-client@6.3.0": patches/@codemirror__lsp-client@6.3.0.patch
