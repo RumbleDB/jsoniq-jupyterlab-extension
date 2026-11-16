@@ -41,7 +41,9 @@
         "fmt": "oxfmt",
         "fmt:check": "oxfmt --check",
         "lint": "oxlint",
-        "lint:fix": "oxlint --fix"
+        "lint:fix": "oxlint --fix",
+        "changeset": "changeset",
+        "release:version": "changeset version"
     },
     "dependencies": {
         "@codemirror/autocomplete": "^6.20.1",
@@ -69,6 +71,8 @@
         "@shikijs/vscode-textmate": "^10.1.0"
     },
     "devDependencies": {
+        "@changesets/changelog-github": "^1.0.1",
+        "@changesets/cli": "^3.0.3",
         "@jupyterlab/builder": "^4.5.11",
         "@types/node": "^25.9.2",
         "jsoniq-language-server": "^2.21.0",

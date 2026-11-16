@@ -1,12 +1,76 @@
-name: Publish Python distribution to PyPI
+name: Release
+
+# On each push to main, changesets keeps a "[ci] release" pull request up to date, which bumps the
+# version and writes the changelog. Once it is merged, no changesets are left and the version has no
+# GitHub release yet, so this publishes it to PyPI, then tags it and creates the GitHub release.
+#
+# PyPI trusts this workflow by its file name and the release environment: keep both.
 
 on:
-    release:
-        types: [published]
+    push:
+        branches:
+            - main
+    workflow_dispatch:
+
+concurrency:
+    group: release
+    cancel-in-progress: false
+
+permissions: {}
 
 jobs:
+    version:
+        name: Open release pull request
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+            pull-requests: write
+        outputs:
+            version: ${{ steps.unreleased.outputs.version }}
+            unreleased: ${{ steps.changesets.outputs.hasChangesets == 'false' && steps.unreleased.outputs.unreleased == 'true' }}
+
+        steps:
+            - uses: actions/checkout@v6
+
+            - name: Set up pnpm
+              uses: pnpm/action-setup@v6
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v6
+              with:
+                  node-version: 24
+                  cache: pnpm
+
+            - name: Install dependencies
+              run: pnpm install --frozen-lockfile
+
+            - name: Create or update the release pull request
+              id: changesets
+              uses: changesets/action@v2
+              with:
+                  version: pnpm release:version
+                  title: "[ci] release"
+                  commit: "[ci] release"
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Check whether the version is released
+              id: unreleased
+              run: |
+                  version=$(node -p 'require("./package.json").version')
+                  echo "version=$version" >> "$GITHUB_OUTPUT"
+                  if gh release view "v$version" > /dev/null 2>&1; then
+                      echo "unreleased=false" >> "$GITHUB_OUTPUT"
+                  else
+                      echo "unreleased=true" >> "$GITHUB_OUTPUT"
+                  fi
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     build:
         name: Build distribution
+        needs: version
+        if: needs.version.outputs.unreleased == 'true'
         runs-on: ubuntu-latest
 
         steps:
@@ -14,16 +78,17 @@ jobs:
               with:
                   persist-credentials: false
 
+            - name: Set up pnpm
+              uses: pnpm/action-setup@v6
+
             - name: Set up Node.js
               uses: actions/setup-node@v6
               with:
                   node-version: 24
-
-            - name: Set up pnpm
-              uses: pnpm/action-setup@v6
+                  cache: pnpm
 
             - name: Install dependencies
-              run: pnpm install
+              run: pnpm install --frozen-lockfile
 
             - name: Install uv
               uses: astral-sh/setup-uv@v7
@@ -51,17 +116,14 @@ jobs:
                   path: dist/whl
 
     publish-to-pypi:
-        name: >-
-            Publish Python distribution to PyPI
-        if: startsWith(github.ref, 'refs/tags/') # only publish to PyPI on tag pushes
-        needs:
-            - build
+        name: Publish to PyPI
+        needs: build
         runs-on: ubuntu-latest
         environment:
             name: release
             url: https://pypi.org/p/jsoniq-jupyterlab-extension
         permissions:
-            id-token: write # IMPORTANT: mandatory for trusted publishing
+            id-token: write # For trusted publishing
 
         steps:
             - name: Download all the dists
@@ -69,5 +131,35 @@ jobs:
               with:
                   name: python-package-distributions
                   path: dist/
+
             - name: Publish distribution to PyPI
               uses: pypa/gh-action-pypi-publish@release/v1
+              with:
+                  skip-existing: true # So that a failed GitHub release can be rerun
+
+    github-release:
+        name: Create GitHub release
+        needs: [version, publish-to-pypi]
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+
+        steps:
+            - uses: actions/checkout@v6
+              with:
+                  persist-credentials: false
+
+            - name: Download all the dists
+              uses: actions/download-artifact@v8
+              with:
+                  name: python-package-distributions
+                  path: dist/
+
+            - name: Tag the version and create its release
+              run: |
+                  # The version's section of the changelog, without its heading.
+                  awk -v heading="## $VERSION" '$0 == heading { found = 1; next } /^## / && found { exit } found' CHANGELOG.md > notes.md
+                  gh release create "v$VERSION" dist/* --target "$GITHUB_SHA" --title "v$VERSION" --notes-file notes.md
+              env:
+                  VERSION: ${{ needs.version.outputs.version }}
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
