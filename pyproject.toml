@@ -7,8 +7,9 @@
     license         = "Apache-2.0"
     dependencies    = [
         "jupyter-lsp>=2.3.1",
+        "jupyter-server>=2.13,<3",
         "jupyterlab>=4.0.0,<5",
-        "jupyterlab-lsp>=5.3.0"
+        "jupyterlab-lsp>=5.3.0",
     ]
     dynamic         = ["authors", "description", "keywords", "version"]
 
@@ -19,6 +20,9 @@
 
     [project.entry-points.jupyter_lsp_spec_v1]
         jsoniq-language-server = "jsoniq_jupyterlab_extension.specs:jsoniq_language_server"
+
+[dependency-groups]
+    dev = ["pytest>=9.2.0", "pytest-jupyter[server]>=0.11.0"]
 
 [build-system]
     requires      = [
@@ -37,7 +41,7 @@
     fields = ["description", "authors", "keywords"]
 
 [tool.hatch.build]
-    artifacts = ["dist/labextension"]
+    artifacts = ["dist/labextension", "jsoniq_jupyterlab_extension/language-server"]
 
     [tool.hatch.build.targets.wheel]
         packages = ["jsoniq_jupyterlab_extension"]
@@ -45,6 +49,7 @@
         [tool.hatch.build.targets.wheel.shared-data]
             "dist/labextension"              = "share/jupyter/labextensions/jsoniq-jupyterlab-extension"
             "dist/labextension/install.json" = "share/jupyter/labextensions/jsoniq-jupyterlab-extension/install.json"
+            "jupyter-config/server-config"   = "etc/jupyter/jupyter_server_config.d"
 
     [tool.hatch.build.targets.sdist]
         exclude = [".github"]
@@ -52,8 +57,14 @@
     [tool.hatch.build.hooks.jupyter-builder]
         dependencies    = ["hatch-jupyter-builder>=0.5.0"]
         build-function  = "hatch_jupyter_builder.npm_builder"
-        ensured-targets = ["dist/labextension/package.json"]
-        skip-if-exists  = ["dist/labextension/package.json"]
+        ensured-targets = [
+            "dist/labextension/package.json",
+            "jsoniq_jupyterlab_extension/language-server/dist/bundled/main.mjs",
+        ]
+        skip-if-exists  = [
+            "dist/labextension/package.json",
+            "jsoniq_jupyterlab_extension/language-server/dist/bundled/main.mjs",
+        ]
 
         [tool.hatch.build.hooks.jupyter-builder.build-kwargs]
             npm       = ["pnpm"]
@@ -64,3 +75,6 @@
 
 [tool.jupyter-releaser.hooks]
     # hatch-jupyter-builder handles the build
+
+[tool.pytest.ini_options]
+    testpaths = ["tests"]

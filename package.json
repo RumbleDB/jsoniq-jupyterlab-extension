@@ -26,9 +26,10 @@
         "build:lib:prod": "tsc",
         "build:labextension": "jupyter labextension build .",
         "build:labextension:dev": "jupyter labextension build --development True .",
-        "build": "run-s build:lib copy:assets build:labextension:dev",
-        "build:prod": "run-s build:lib:prod copy:assets build:labextension",
+        "build": "run-s build:lib copy:assets copy:server build:labextension:dev",
+        "build:prod": "run-s build:lib:prod copy:assets copy:server build:labextension",
         "copy:assets": "shx mkdir -p dist/images && shx cp images/* dist/images/",
+        "copy:server": "node scripts/vendor-language-server.mjs",
         "watch": "run-p watch:src watch:labextension",
         "watch:src": "tsc -w --sourceMap",
         "watch:labextension": "jupyter labextension watch .",
@@ -51,12 +52,12 @@
         "@jupyterlab/ui-components": "^4.5.7",
         "@lezer/highlight": "^1.2.3",
         "@shikijs/engine-javascript": "^4.6.0",
-        "@shikijs/vscode-textmate": "^10.1.0",
-        "jsoniq-language-server": "^2.8.1"
+        "@shikijs/vscode-textmate": "^10.1.0"
     },
     "devDependencies": {
         "@jupyterlab/builder": "^4.5.7",
         "@types/node": "^25.9.2",
+        "jsoniq-language-server": "^2.21.0",
         "npm-run-all2": "^8.0.4",
         "oxfmt": "^0.48.0",
         "oxlint": "^1.68.0",

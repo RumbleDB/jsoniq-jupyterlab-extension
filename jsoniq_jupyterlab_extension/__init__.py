@@ -1,14 +1,20 @@
-import json
+from importlib.metadata import version
 from pathlib import Path
 
-HERE = Path(__file__).parent.resolve()
-# Check both standard and reorganized dist location
-lab_path = HERE / "labextension"
-if not lab_path.exists():
-    lab_path = HERE.parent / "dist" / "labextension"
+__version__ = version("jsoniq-jupyterlab-extension")
 
-if (lab_path / "package.json").exists():
-    with (lab_path / "package.json").open() as fid:
-        __version__ = json.load(fid)["version"]
-else:
-    __version__ = "0.0.0"  # Fallback
+
+def _jupyter_labextension_paths():
+    """For `jupyter labextension develop`: installed packages get the extension from the wheel."""
+    lab_path = Path(__file__).parent.parent / "dist" / "labextension"
+    return [{"src": str(lab_path), "dest": "jsoniq-jupyterlab-extension"}]
+
+
+def _jupyter_server_extension_points():
+    return [{"module": "jsoniq_jupyterlab_extension"}]
+
+
+def _load_jupyter_server_extension(server_app):
+    from .language_server import setup
+
+    setup(server_app)

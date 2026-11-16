@@ -45,3 +45,6 @@ jobs:
 
             - name: Run tests
               run: pnpm run test
+
+            - name: Run Python tests
+              run: uv run pytest
