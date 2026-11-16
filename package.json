@@ -1,7 +1,7 @@
 {
     "name": "jsoniq-jupyterlab-extension",
     "version": "2.0.0",
-    "description": "JupyterLab extension to support JSONiq magic within python cells. This extension is required to get the JSONiq LSP functionality.",
+    "description": "JupyterLab extension for JSONiq: highlighting and a language server for %%jsoniq cells and .jq files.",
     "keywords": [
         "jsoniq"
     ],
@@ -36,7 +36,6 @@
         "watch": "run-p watch:src watch:labextension",
         "watch:src": "tsc -w --sourceMap",
         "watch:labextension": "jupyter labextension watch .",
-        "link": "jupyter labextension link .",
         "sync:grammars": "shx cp ../jsoniq-lsp/packages/vscode-extension/syntaxes/jsoniq.tmLanguage.json ../jsoniq-lsp/packages/vscode-extension/syntaxes/xquery.tmLanguage.json src/syntaxes/",
         "test": "vitest run tests",
         "fmt": "oxfmt",

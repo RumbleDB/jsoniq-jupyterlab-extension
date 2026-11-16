@@ -1,15 +1,23 @@
 # JSONiq JupyterLab Extension
 
-`jsoniq-jupyterlab-extension` is a JupyterLab extension that adds basic token highlighting for JSONiq code. Syntax highlighting with CodeMirror is enabled for jsoniq cells using the `%%jsoniq` magic and for `.jq` files.
+`jsoniq-jupyterlab-extension` is a JupyterLab extension for JSONiq: it highlights `%%jsoniq` cells and `.jq` files, and connects them to the JSONiq language server.
 
 ## Features
 
-- **Basic token highlighting** - provides JSONiq token highlighting for `%%jsoniq` magic cells within Python notebooks.
-- **Syntax highlighting for `.jq` files** - can be enabled for `.jq` files using the Jupyter language selector.
+- **Syntax highlighting** - `%%jsoniq` cells and `.jq` files are highlighted with the same TextMate grammars as the VS Code extension, and `%%sparksql` cells as SQL.
+- **Language server** - completions, diagnostics, hover documentation, signature help, go to definition and rename for `%%jsoniq` cells and `.jq` files.
 
 ## Installation
 
 Install the extension from Python packaging. No `npm` or `yarn` installation is required for users.
+
+The language server runs with [Node.js](https://nodejs.org), which must be on the `PATH` of the Jupyter server. Completions of fields and types also need Java 17 or later; RumbleDB is downloaded on first use. To run another build of the language server, set `JSONIQ_LSP_SERVER` to its `main.mjs`.
+
+RumbleDB is downloaded to the user's cache directory, or to `JSONIQ_LSP_CACHE_DIR`. To download it ahead of time, for example when building an image:
+
+```sh
+python -m jsoniq_jupyterlab_extension ensure-wrapper
+```
 
 To install, run:
 
@@ -40,55 +48,37 @@ This cell should become highlighted.
 
 ## Development
 
-To contribute to the development of `jsoniq-jupyterlab`, follow these steps:
-
-1. Clone the repository:
+1. Clone the repository and install the dependencies:
 
     ```sh
-    git clone https://github.com/davidbuzatu-marian/jsoniq-jupyterlab.git
-    cd jsoniq-jupyterlab
+    git clone https://github.com/RumbleDB/jsoniq-jupyterlab-extension.git
+    cd jsoniq-jupyterlab-extension
+    pnpm install
+    uv sync
     ```
 
-2. Install dependencies:
+2. Build the extension, and link it into JupyterLab so that rebuilds take effect:
 
     ```sh
-    pnpm install         # Install JavaScript dependencies
-    uv python install    # Setup Python environment using uv
-    uv sync              # Sync dependencies for Python environment
+    uv run pnpm run build
+    uv run jupyter labextension develop . --overwrite
     ```
 
-3. Build the extension:
+3. Launch JupyterLab. `pnpm run watch` rebuilds the extension when the source changes; reload the page to see it.
 
     ```sh
-    uv run pnpm run build:prod
+    uv run jupyter lab
     ```
 
-4. Link the extension for local development:
-
-    ```sh
-    jupyter labextension link .
-    ```
-
-5. Launch JupyterLab:
-
-    ```sh
-    jupyter lab
-    ```
-
-## Building and testing the extension
-
-To build the project for production, the following commands build the JavaScript files, build the Jupyter extension and install this result for local testing.
-
-```sh
-uv run pnpm run build:prod
-```
+Run the tests with `pnpm test` and `uv run pytest`. `uv run pnpm run build:prod` builds the extension for release.
 
 ## Project Structure
 
-- `src/`: Contains the source code of the extension.
-- `dist/`: Build artifacts for the extension.
-- `package.json`: Contains the configuration and dependencies for the extension.
-- `tests/`: Contains a set of tests relating to syntax highlighting.
+- `src/`: The JupyterLab extension: highlighting in `code-mirror/`, the language server client in `lsp/`.
+- `jsoniq_jupyterlab_extension/`: The Jupyter server extension, which runs a language server for each JupyterLab tab.
+- `schema/`: The extension's settings.
+- `scripts/`: Copies the language server into the Python package when building.
+- `tests/`: Tests of the highlighting.
 
 ## Contributing
 
